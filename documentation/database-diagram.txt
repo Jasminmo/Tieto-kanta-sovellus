@@ -1,0 +1,42 @@
+// Database diagram
+// Can be drawn using dbdiagram.io
+// ------------------
+
+Table Users as U {
+  id            int [pk, increment] // auto-increment
+  firstname     varchar
+  lastname      varchar
+  username      varchar
+  salted_passwd varchar
+  created_at    timestamp
+}
+
+Table Admin as A {
+  id            int [pk, increment]
+  username      varchar
+  salted_passwd varchar
+  created_at    timestamp
+}
+
+Table Channel as C {
+  id         int [pk, increment]
+  topic      varchar
+  created_at timestamp
+}
+
+Table Thread as T {
+  id         int [pk, increment]
+  channel_id int [ref: > C.id]
+  owner_id   int [ref: > U.id]
+  title      varchar
+  created_at timestamp
+}
+
+Table Message as M {
+  id        int [pk, increment]
+  sender_id int [ref: > U.id]
+  thread_id int [ref: > T.id]
+  reply_id  int [ref: > M.id]
+  content   varchar
+  sent      timestamp
+}

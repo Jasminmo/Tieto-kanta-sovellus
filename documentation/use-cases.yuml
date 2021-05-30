@@ -1,0 +1,18 @@
+// {type:usecase}
+
+[Admin]-(Log in & out)
+[Admin]-(Add and remove channels)
+[Admin]-(Add a secret channel)
+
+[User]-(Sign up)
+[User]-(Log in & out)
+[User]-(Browse channels & threads)
+[User]-(Browse message threads)
+
+[User]-(Create a new thread)
+[User]-(Edit created threads name)
+[User]-(Delete created thread)
+
+[User]-(Send a message)
+[User]-(Edit sent message)
+[User]-(Search for messages)

@@ -1,0 +1,25 @@
+// Datamodel Class Diagram
+// Can be drawn using yuml.me or yUML extension in Visual Studio Code
+// {type:class}
+// {direction:topDown}
+// ------------------
+
+// Properties
+[Admin|username: String;password: String; created_at: Timestamp]
+[User|firstname: String; lastname: String; username: String; password: String; created_at: Timestamp]
+[Channel|topic: String; last_message_sent: Timestamp; created_at: Timestamp]
+[Thread|title: String; created_at: Timestamp]
+[Message|content: String; sent: Timestamp]
+
+// Relations
+[Admin]-*>[Channel]
+[Channel]-*>[Thread]
+
+[PublicChannel]-^[Channel]
+[SecretChannel]-^[Channel]
+
+[User]-*>[Thread]
+[User]-*>[Message]
+[SecretChannel]-*>[User]
+
+[Thread]-*>[Message]
