@@ -1,6 +1,9 @@
 # Keskustelusovellus
 Sovelluksessa näkyy keskustelualueita, joista jokaisella on tietty aihe. Alueilla on keskusteluketjuja, jotka muodostuvat viesteistä. Jokainen käyttäjä on peruskäyttäjä tai ylläpitäjä.
 
+## Sovelluksen osoite
+Sovellus löytyy verkosta osoitteessa [https://powerful-everglades-12307.herokuapp.com](https://powerful-everglades-12307.herokuapp.com).
+
 ## [Dokumentaatio](./docs/README.md)
 
 ## Sovelluksen ominaisuuksia:
