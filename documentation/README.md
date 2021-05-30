@@ -22,7 +22,7 @@
 ### User
 
 #### Login and browse channels
-- [ ] Users can log in, out, sign up.
+- [x] Users can register, log in, and log out.
 - [ ] The user sees a list of channels on the front page of the application.
 - [ ] The list of channels contains the number of threads and messages in each channel and the time of the last message sent.
 
