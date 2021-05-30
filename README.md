@@ -7,7 +7,7 @@ Sovellukseen voi rekisteröityä, kirjautua sisään ja ulos.
 ## Sovelluksen osoite
 Sovellus löytyy verkosta osoitteessa [https://powerful-everglades-12307.herokuapp.com](https://powerful-everglades-12307.herokuapp.com).
 
-## [Dokumentaatio](./docs/README.md)
+## [Dokumentaatio](./documentation/README.md)
 
 ## Sovelluksen ominaisuuksia:
 - Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen.
