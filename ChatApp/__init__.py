@@ -12,7 +12,8 @@ def create_app(test_config=None):
         SECRET_KEY='dev',
         FLASK_APP=getenv("FLASK_APP"),
         FLASK_ENV=getenv("FLASK_ENV"),
-        SQLALCHEMY_DATABASE_URI=getenv("DATABASE_URL"),
+        # Fix URI convention used by heroku
+        SQLALCHEMY_DATABASE_URI=getenv("DATABASE_URL").replace("postgres://", "postgresql://"),
     )
 
     if test_config is None:
