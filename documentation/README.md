@@ -2,22 +2,19 @@
 
 ## Table of contents
  * [Use cases](#use-cases)
-   + [Admin](#admin)
    + [User](#user)
      - [Browse channels](#login-and-browse-channels)
      - [Manage threads](#manage-threads)
      - [Messaging](#messaging)
+   + [Admin](#admin)
  * [Data model](#data-model)
     + [Class diagram](#class-diagram)
     + [Database schema](#database-schema)
 
+## Setup
+- [ ] The database is initialized with initial values.
+
 ## Use cases
-
-### Admin
-- [ ] The administrator can add and delete channels (discussion boards).
-- [ ] The administrator can create a secret channel and determine which users have access to that channel.
-
-<img src="./img/use-cases/admin.png">
 
 ### User
 
@@ -26,14 +23,14 @@
 - [ ] The user sees a list of channels on the front page of the application.
 - [ ] The list of channels contains the number of threads and messages in each channel and the time of the last message sent.
 
-<img src="./img/use-cases/user-browse.png">
+<img src="./img/use-cases/user-browse.jpeg">
 
 #### Manage threads
 - [ ] The user can create a new thread in the area by entering the thread title and the content of first message.
 - [ ] The user can edit the title of the thread he has created.
 - [ ] The user can delete the thread he has created.
 
-<img src="./img/use-cases/user-threads.png">
+<img src="./img/use-cases/user-threads.jpeg">
 
 
 #### Messaging
@@ -42,12 +39,19 @@
 - [ ] The user can edit the content of the message he has sent.
 - [ ] The user can delete the message he has sent.
 
-<img src="./img/use-cases/user-msg.png">
+<img src="./img/use-cases/user-msg.jpeg">
+
+### Admin
+- [ ] The application has a default administrator.
+- [ ] The administrator can add and delete channels (discussion boards).
+- [ ] The administrator can create a secret channel and determine which users have access to that channel.
+
+<img src="./img/use-cases/admin.jpeg">
 
 ## Data model
 
 ### Class diagram
-<img src="./img/data/class.png">
+<img src="./img/data/class.jpeg">
 
 ### Database schema
 This diagram was generated from [this file](./database-diagram.txt) using [dbdiagram.io](dbdiagram.io) and
