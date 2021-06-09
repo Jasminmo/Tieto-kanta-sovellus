@@ -1,51 +1,45 @@
-import functools
-
-from flask import (
-    Blueprint, flash, g, current_app, redirect, render_template, request, session, url_for
-)
-
+from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
-
+from . import get_db
+from .models import Users
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+db = get_db()
 
-db = None
 
-def set_db(conn):
-    global db
-    db = conn
+@bp.before_app_request
+def load_logged_in_user():
+    """If a user id is stored in the session, load the user object from
+    the database into ``g.user``."""
+    user_id = session.get("user_id")
+
+    if user_id is None:
+        g.user = None
+    else:
+        g.user = Users.query.filter(Users.id == user_id).first()
+
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
-        firstname = request.form['firstname']
-        lastname = request.form['lastname']
         username = request.form['username']
         password = request.form['password']
+        print(request.form)
+        admin = g.user != None and 'admin' in request.form
         error = None
 
-        if not firstname:
-            error = 'First name is required.'
-        elif not lastname:
-            error = 'Last name is required.'
         if not username:
             error = 'Username is required.'
         elif not password:
             error = 'Password is required.'
         elif db.session.execute(
-            'SELECT id FROM users WHERE username = :username', {"username":username}
+            'SELECT id FROM users WHERE username = :username', {"username": username}
         ).fetchone() is not None:
             error = f"User {username} is already registered."
 
         if error is None:
-            db.session.execute(
-                'INSERT INTO users (firstname, lastname, username, salted_passwd) VALUES (:firstname, :lastname, :username, :salted_passwd)',
-                {
-                    "firstname": firstname,
-                    "lastname": lastname,
-                    "username": username,
-                    "salted_passwd": generate_password_hash(password)
-                })
+            user = Users(username=username, password=generate_password_hash(password), is_admin=admin)
+            db.session.add(user)
             db.session.commit()
             return redirect(url_for('auth.login'))
 
@@ -54,30 +48,28 @@ def register():
     return render_template('auth/register.html')
 
 
+
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         error = None
-        user = db.session.execute(
-            'SELECT * FROM users WHERE username = :username', {"username": username}
-        ).fetchone()
+        user = Users.query.filter(Users.username == username).first()
 
         if user is None:
             error = 'Incorrect username.'
-        elif not check_password_hash(user['salted_passwd'], password):
+        elif not check_password_hash(user.password, password):
             error = 'Incorrect password.'
 
         if error is None:
             session.clear()
-            session['user_id'] = user['id']
+            session['user_id'] = user.id
             return redirect(url_for('index'))
 
         flash(error)
 
     return render_template('auth/login.html')
-
 
 
 @bp.route("/logout")

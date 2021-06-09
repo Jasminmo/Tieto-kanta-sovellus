@@ -5,6 +5,13 @@ from flask import Flask
 from flask import redirect, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 
+SQL = None
+
+
+def get_db():
+    return SQL
+
+
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -29,22 +36,19 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
-    @app.route('/hello')
+    global SQL
+    SQL = SQLAlchemy(app)
+
+    # authentication
+    from . import auth, init_db
+    init_db.init_app(app)
+    app.register_blueprint(auth.bp)
+
+
+    @app.route('/')
     def index():
         return render_template('index.html')
 
-    # database initialization
-    #from . import db
-    #db.init_app(app)
-
-    db = SQLAlchemy(app)
-
-
-    # authentication
-    from . import auth
-    auth.set_db(db)
-    app.register_blueprint(auth.bp)
-
     app.add_url_rule("/", endpoint="index")
+
     return app
