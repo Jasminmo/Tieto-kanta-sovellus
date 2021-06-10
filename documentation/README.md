@@ -12,7 +12,7 @@
     + [Database schema](#database-schema)
 
 ## Setup
-- [ ] The database is initialized with initial values.
+- [x] The database is initialized with initial values.
 
 ## Use cases
 
@@ -20,13 +20,14 @@
 
 #### Login and browse channels
 - [x] Users can register, log in, and log out.
-- [ ] The user sees a list of channels on the front page of the application.
-- [ ] The list of channels contains the number of threads and messages in each channel and the time of the last message sent.
+- [x] The user sees a list of channels on the front page of the application.
+- [x] The list of channels contains the number of threads and messages in each channel and the time of the last message sent.
 
 <img src="./img/use-cases/user-browse.jpeg">
 
 #### Manage threads
-- [ ] The user can create a new thread in the area by entering the thread title and the content of first message.
+- [x] The user can create a new thread to a given channel.
+- [ ] The created thread has a first message linked to it.
 - [ ] The user can edit the title of the thread he has created.
 - [ ] The user can delete the thread he has created.
 
@@ -42,9 +43,11 @@
 <img src="./img/use-cases/user-msg.jpeg">
 
 ### Admin
-- [ ] The application has a default administrator.
-- [ ] The administrator can add and delete channels (discussion boards).
-- [ ] The administrator can create a secret channel and determine which users have access to that channel.
+- [x] The application has a default administrator.
+- [x] The administrator can add channels (discussion boards).
+- [ ] The administrator can delete channels.
+- [ ] The administrator can create a secret channel.
+- [ ] The administrator can determine which users have access to that secret channel.
 
 <img src="./img/use-cases/admin.jpeg">
 

@@ -27,6 +27,12 @@ class Channels(db.Model):
     def __repr__(self):
         return '<Channel %r>' % self.title
 
+    def get_messages(self):
+        messages = []
+        for thread in self.threads:
+            messages += thread.messages
+        return messages
+
 
 class Threads(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -71,10 +77,10 @@ def setup_defaults():
     default_channel = Channels(title='Default', description="This is default channel.", creator=admin)
     db.session.add(default_channel)
 
-    thread1 = Threads(title='Starting thread', creator=user, channel=default_channel)
+    thread1 = Threads(title='Starting thread', creator=admin, channel=default_channel)
     db.session.add(thread1)
 
-    message1 = Messages(content='H1. How are you?', sender=user, thread=thread1)
+    message1 = Messages(content='H1. How are you?', sender=admin, thread=thread1)
     db.session.add(message1)
 
     message2 = Messages(content='H2. I\'m fine.', sender=user, thread=thread1, reply_to=message1)

@@ -24,7 +24,7 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        print(request.form)
+
         admin = g.user != None and 'admin' in request.form
         error = None
 

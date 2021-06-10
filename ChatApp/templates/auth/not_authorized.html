@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Login first!{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+You need to <a href="{{ url_for('auth.login') }}">login</a> first!
+{% endblock %}

@@ -44,11 +44,18 @@ def create_app(test_config=None):
     init_db.init_app(app)
     app.register_blueprint(auth.bp)
 
+    # channels
+    from . import channels
+    app.register_blueprint(channels.bp)
 
-    @app.route('/')
-    def index():
-        return render_template('index.html')
+    # threads
+    from . import threads
+    app.register_blueprint(threads.bp)
 
-    app.add_url_rule("/", endpoint="index")
+    # mypage
+    from . import users
+    app.register_blueprint(users.bp)
+
+    app.add_url_rule("/", endpoint="index", view_func=channels.index)
 
     return app

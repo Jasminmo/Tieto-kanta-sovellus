@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}{{ channel.title }}{% endblock %}</h1>
+  <ul>
+    {% for thread in channel.threads %}
+      <li>
+        <a href="{{ url_for('threads.view_thread', id=thread.id) }}">{{ thread.title }}</a>
+          has {{ thread.messages | count }} messages
+      </li>
+    {% endfor %}
+  </ul>
+  <a href="{{ url_for('threads.new', channel_id=channel.id) }}" class="btn btn-primary">add thread</a>
+{% endblock %}

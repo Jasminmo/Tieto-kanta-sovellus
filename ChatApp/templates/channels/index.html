@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Channels{% endblock %}</h1>
+  <ul>
+    {% for channel in channels %}
+      <li>
+        <a href="{{ url_for('channels.view_channel', id=channel.id) }}">{{ channel.title }}</a>
+        has {{ channel.threads | count }} threads and {{ channel.get_messages() | count }} messages.
+
+        Final message sent at {{ channel.get_messages() | map(attribute="send_at") | max }} messages.
+        This channel was opened by {{ channel.creator.username }}.
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

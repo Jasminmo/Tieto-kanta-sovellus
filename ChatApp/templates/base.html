@@ -9,7 +9,6 @@
   </head>
 
 <body>
-
   <div class="container">
     <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
@@ -27,9 +26,7 @@
                 aria-expanded="false">
                 <span class="text-primary">{{ g.user['username'] }}</span> <i class="bi bi-person-circle"></i> </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#"><i class="bi bi-person-fill"> &nbsp;</i> Profile </a></li>
-                <li><a class="dropdown-item" href="#"><i class="bi bi-menu-up"> &nbsp;</i> Channels </a></li>
-                <li><a class="dropdown-item" href="#"><i class="bi bi-chat-text"></i> &nbsp; Threads </a></li>
+                <li><a class="dropdown-item" href="{{ url_for('mypage.threads') }}"><i class="bi bi-menu-up"></i> &nbsp; Threads </a></li>
                 <li>
                   <hr class="dropdown-divider">
                 </li>
