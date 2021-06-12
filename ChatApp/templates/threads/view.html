@@ -8,4 +8,11 @@
       <li>{{ messages.send_at }} - {{ messages.sender.username }}: {{ messages.content }}</li>
     {% endfor %}
   </ul>
+
+  {% if g.user %}
+    {% if g.user.is_admin or (g.user.id == thread.creator) %}
+      <a href="{{ url_for('.edit', id=thread.id) }}" class="btn btn-primary">Edit</a>
+    {% endif %}
+  {% endif %}
+
 {% endblock %}

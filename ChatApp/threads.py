@@ -43,4 +43,27 @@ def new(channel_id):
     return render_template('threads/new.html')
 
 
+@bp.route('/edit/<int:id>', methods=('GET', 'POST'))
+def edit(id):
+    thread = Threads.query.filter(Threads.id == id).first()
+    if g.user == None or (not g.user.is_admin or g.user.username != thread.creator.username):
+        return render_template('auth/not_authorized.html'), 401
+
+    if request.method == 'POST':
+        title = request.form['title']
+        error = None
+
+        if not title:
+            error = 'title is required.'
+
+        if error is None:
+            thread.title = title
+            db.session.add(thread)
+            db.session.commit()
+            return redirect(url_for('.view_thread', id=thread.id))
+
+        flash(error)
+
+    return render_template('threads/edit.html', thread=thread)
+
 
