@@ -2,6 +2,11 @@
 
 {% block header %}
   <h1>{% block title %}{{ channel.title }}{% endblock %}</h1>
+
+  {% if channel.description %}
+  <p>{{ channel.description }}</p>
+  {% endif %}
+
   <ul>
     {% for thread in channel.threads %}
       <li>
@@ -10,5 +15,14 @@
       </li>
     {% endfor %}
   </ul>
-  <a href="{{ url_for('threads.new', channel_id=channel.id) }}" class="btn btn-primary">add thread</a>
+
+  {% if g.user and g.user.admin %}
+    <a href="{{ url_for('threads.new', channel_id=channel.id) }}" class="btn btn-primary">add thread</a>
+
+    <form action="{{ url_for('.delete', id=channel.id) }}" method="post" style="display: inline;">
+        <input class="btn btn-danger" type="submit" value="Delete">
+    </form>
+
+  {% endif %}
+
 {% endblock %}

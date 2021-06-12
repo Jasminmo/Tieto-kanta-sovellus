@@ -42,3 +42,14 @@ def new():
 
     return render_template('channels/new.html')
 
+
+@bp.route('/<int:id>/delete', methods=('POST',))
+def delete(id):
+    if g.user == None or not g.user.is_admin:
+        return render_template('auth/not_authorized.html'), 401
+
+    channel = Channels.query.filter(Channels.id == id).first()
+    db.session.delete(channel)
+    db.session.commit()
+    return redirect(url_for('.index'))
+

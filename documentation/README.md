@@ -45,7 +45,7 @@
 ### Admin
 - [x] The application has a default administrator.
 - [x] The administrator can add channels (discussion boards).
-- [ ] The administrator can delete channels.
+- [x] The administrator can delete channels.
 - [ ] The administrator can create a secret channel.
 - [ ] The administrator can determine which users have access to that secret channel.
 
