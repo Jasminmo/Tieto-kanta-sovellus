@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>Edit message</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post" class="col-4">
+    <div class="mb-3">
+      <label for="message">Message</label>
+      <textarea class="form-control" name="message" id="message" required>{{message.content}}</textarea>
+    </div>
+    <div class="mb-3">
+      <input class="btn btn-primary" type="submit" value="Update">
+    </div>
+  </form>
+{% endblock %}

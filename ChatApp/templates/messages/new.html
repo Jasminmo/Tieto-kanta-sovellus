@@ -1,0 +1,11 @@
+{% block form %}
+  <form method="post" action="{{ url_for('messages.send', thread_id=thread.id) }}" class="col-4" style="margin-top: 30px;">
+    <div class="mb-3">
+      <label for="message">Message</label>
+      <textarea class="form-control" name="message" id="message" required></textarea>
+      <button class="btn btn-primary" type="submit" style="display: block; width: 100%;">
+        Send <i class="bi bi-arrow-right-square-fill"></i>
+      </button>
+    </div>
+  </form>
+{% endblock %}

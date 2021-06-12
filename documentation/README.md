@@ -35,10 +35,10 @@
 
 
 #### Messaging
-- [ ] The user can search for all messages.
-- [ ] The user can write a new message to an existing thread.
-- [ ] The user can edit the content of the message he has sent.
-- [ ] The user can delete the message he has sent.
+- [ ] The user can search for messages.
+- [x] The user can write a new message to an existing thread.
+- [x] The user can edit the content of the message he has sent.
+- [x] The user can delete the message he has sent.
 
 <img src="./img/use-cases/user-msg.jpeg">
 

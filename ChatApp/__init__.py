@@ -56,6 +56,10 @@ def create_app(test_config=None):
     from . import users
     app.register_blueprint(users.bp)
 
+    # messages
+    from . import messages
+    app.register_blueprint(messages.bp)
+
     app.add_url_rule("/", endpoint="index", view_func=channels.index)
 
     return app
