@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>Create a new channel</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post" class="col-4">
+    <div class="mb-3">
+      <label for="title">Title</label>
+      <input class="form-control" name="title" id="title" required>
+    </div>
+    <div class="mb-3">
+      <label for="description">Description</label>
+      <textarea class="form-control" name="description" id="description"></textarea>
+    </div>
+    <div class="mb-3">
+      <input class="btn btn-primary" type="submit" value="Create">
+    </div>
+  </form>
+{% endblock %}

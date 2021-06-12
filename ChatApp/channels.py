@@ -17,3 +17,28 @@ def index():
 def view_channel(id):
     channel = Channels.query.filter(Channels.id == id).first()
     return render_template('channels/view.html', channel=channel)
+
+
+@bp.route('/new', methods=('GET', 'POST'))
+def new():
+    if g.user == None or not g.user.is_admin:
+        return render_template('auth/not_authorized.html'), 401
+
+    if request.method == 'POST':
+        title = request.form['title']
+        description = request.form['title']
+        error = None
+
+        if not title:
+            error = 'title is required.'
+
+        if error is None:
+            channel = Channels(title=title, description=description, creator=g.user)
+            db.session.add(channel)
+            db.session.commit()
+            return redirect(url_for('.view_channel', id=channel.id))
+
+        flash(error)
+
+    return render_template('channels/new.html')
+
