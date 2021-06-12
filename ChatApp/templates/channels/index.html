@@ -13,5 +13,9 @@
       </li>
     {% endfor %}
   </ul>
-  <a href="{{ url_for('channels.new') }}" class="btn btn-primary">new</a>
+
+  {% if g.user and g.user.is_admin %}
+    <a href="{{ url_for('channels.new') }}" class="btn btn-primary">new</a>
+  {% endif %}
+
 {% endblock %}

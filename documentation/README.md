@@ -28,7 +28,7 @@
 #### Manage threads
 - [x] The user can create a new thread to a given channel.
 - [x] The created thread has a first message linked to it.
-- [ ] The user can edit the title of the thread he has created.
+- [x] The user can edit the title of the thread he has created.
 - [ ] The user can delete the thread he has created.
 
 <img src="./img/use-cases/user-threads.jpeg">

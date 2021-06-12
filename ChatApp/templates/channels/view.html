@@ -16,13 +16,13 @@
     {% endfor %}
   </ul>
 
-  {% if g.user and g.user.admin %}
+  {% if g.user %}
     <a href="{{ url_for('threads.new', channel_id=channel.id) }}" class="btn btn-primary">add thread</a>
-
-    <form action="{{ url_for('.delete', id=channel.id) }}" method="post" style="display: inline;">
-        <input class="btn btn-danger" type="submit" value="Delete">
-    </form>
-
+    {% if g.user.is_admin %}
+      <form action="{{ url_for('.delete', id=channel.id) }}" method="post" style="display: inline;">
+          <input class="btn btn-danger" type="submit" value="Delete">
+      </form>
+    {% endif %}
   {% endif %}
 
 {% endblock %}
