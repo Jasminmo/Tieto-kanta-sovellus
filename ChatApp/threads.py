@@ -1,3 +1,4 @@
+from ChatApp import channels
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 from . import get_db
@@ -10,6 +11,8 @@ db = get_db()
 @bp.route('/<int:id>')
 def view_thread(id):
     thread = Threads.query.filter(Threads.id == id).first()
+    if thread == None:
+        return render_template('auth/404.html'), 404
     return render_template('threads/view.html', thread=thread)
 
 
@@ -46,6 +49,8 @@ def new(channel_id):
 @bp.route('/edit/<int:id>', methods=('GET', 'POST'))
 def edit(id):
     thread = Threads.query.filter(Threads.id == id).first()
+    if thread == None:
+        return render_template('auth/404.html'), 404
     if g.user == None or (not g.user.is_admin or g.user.username != thread.creator.username):
         return render_template('auth/not_authorized.html'), 401
 
@@ -66,4 +71,17 @@ def edit(id):
 
     return render_template('threads/edit.html', thread=thread)
 
+
+@bp.route('/<int:id>/delete', methods=('POST',))
+def delete(id):
+    thread = Threads.query.filter(Threads.id == id).first()
+    if thread == None:
+        return render_template('auth/404.html'), 404
+    if g.user == None or not (g.user.is_admin or (g.user.id == thread.creator.id)):
+        return render_template('auth/not_authorized.html'), 401
+
+    channel_id = thread.channel.id
+    db.session.delete(thread)
+    db.session.commit()
+    return redirect(url_for('channels.view_channel', id=channel_id))
 

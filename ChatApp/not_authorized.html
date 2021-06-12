@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Not authorized!{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% if not g.user %}
+    You need to <a href="{{ url_for('auth.login') }}">login</a> first!
+  {% endif %}
+{% endblock %}
