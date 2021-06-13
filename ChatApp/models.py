@@ -69,6 +69,8 @@ class Messages(db.Model):
 
 
 def setup_defaults():
+    subjects = ['Cinema', 'Viral Stories', 'Memes', 'Hobbies']
+    topics = ['Something...', 'What about...', 'Popular']
     admin = Users(username='admin', password=generate_password_hash('password'), is_admin=True)
     db.session.add(admin)
 
@@ -78,22 +80,25 @@ def setup_defaults():
     default_channel = Channels(title='Default', description="This is default channel.", creator=admin)
     db.session.add(default_channel)
 
-    for i in range(3):
-        new_channel = Channels(title='Channel ' + str(i+1), description='This is channel number ' + str(i+1), creator=admin)
+    for i in range(4):
+        new_channel = Channels(title=subjects[i], description='This is a discussion board for the subject ' + subjects[i], creator=admin)
         db.session.add(new_channel)
 
-        for j in range(4):
-            thread = Threads(title='Thread ' + str(j+1), creator=admin, channel=new_channel)
+        for j in range(3):
+            thread = Threads(title=topics[j], creator=admin, channel=new_channel)
             db.session.add(thread)
 
-            starting_message = Messages(content='This is staring message of this thread.', sender=customer, thread=thread)
-            db.session.add(starting_message)
+            message = Messages(content='First!', sender=customer, thread=thread)
+            db.session.add(message)
 
-            message1 = Messages(content='Hi! How are you?', sender=admin, thread=thread)
-            db.session.add(message1)
+            message = Messages(content='Second!', sender=customer, thread=thread, reply_to=message)
+            db.session.add(message)
 
-            message2 = Messages(content='Hi! I\'m fine.', sender=customer, thread=thread, reply_to=message1)
-            db.session.add(message2)
+            message = Messages(content='Hi! How are you?', sender=admin, thread=thread)
+            db.session.add(message)
+
+            message = Messages(content='Hi! I\'m fine.', sender=customer, thread=thread, reply_to=message)
+            db.session.add(message)
 
     db.session.commit()
 
