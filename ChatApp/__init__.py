@@ -66,4 +66,10 @@ def create_app(test_config=None):
     def page_not_found(error):
         return render_template('auth/404.html'), 404
 
+    @app.template_filter('timeformat')
+    def _jinja2_filter_datetime(date, format=None):
+        if format == None:
+            format='%a %h %d %Y %H:%M'
+        return date.strftime(format)
+
     return app
