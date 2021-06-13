@@ -51,7 +51,7 @@ def edit(id):
     thread = Threads.query.filter(Threads.id == id).first()
     if thread == None:
         return render_template('auth/404.html'), 404
-    if g.user == None or (not g.user.is_admin or g.user.username != thread.creator.username):
+    if g.user == None or g.user.id != thread.creator.id:
         return render_template('auth/not_authorized.html'), 401
 
     if request.method == 'POST':

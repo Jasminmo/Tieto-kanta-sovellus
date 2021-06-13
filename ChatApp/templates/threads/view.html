@@ -1,25 +1,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>{% block title %}{{ thread.title }}{% endblock %}</h1>
-  <h4>{{ thread.creator.username }}</h4>
-  <ul>
-    {% for message in thread.messages %}
-      <li>
-        {% include 'messages/view.html' %}
-      </li>
-    {% endfor %}
-  </ul>
 
-  {% if g.user %}
-      {% if g.user.is_admin or (g.user.id == thread.creator.id) %}
-        <a href="{{ url_for('.edit', id=thread.id) }}" class="btn btn-primary">Edit</a>
-        <form action="{{ url_for('.delete', id=thread.id) }}" method="post" style="display: inline;">
-            <input class="btn btn-danger" type="submit" value="Delete">
+<div class="col-6">
+<h1 class="d-flex">
+  {% block title %}{{ thread.title }}{% endblock %}
+
+  <div class="ms-auto">
+    {% if g.user %}
+      {% if g.user.id == thread.creator.id %}
+        <form action="{{ url_for('.delete', id=thread.id) }}" method="post">
+        <button href="{{ url_for('.edit',   id=thread.id) }}" class="btn btn-primary"><i class="bi bi-pencil-fill"></i> Edit</button>
+        <button class="btn btn-danger" type="submit"><i class="bi bi-trash-fill"></i> Delete</button>
         </form>
       {% endif %}
+    {% endif %}
+  </div>
+</h1>
 
-    {% include 'messages/new.html' %}
-  {% endif %}
+<hr>
+    {% for message in thread.messages %}
+        {% include 'messages/view.html' %}
+    {% endfor %}
+
+    {% if g.user %}
+    <hr>
+      {% include 'messages/new.html' %}
+    {% endif %}
+</div>
 
 {% endblock %}
