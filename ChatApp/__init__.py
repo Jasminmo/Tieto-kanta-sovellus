@@ -62,4 +62,8 @@ def create_app(test_config=None):
 
     app.add_url_rule("/", endpoint="index", view_func=channels.index)
 
+    @app.errorhandler(404)
+    def page_not_found(error):
+        return render_template('auth/404.html'), 404
+
     return app

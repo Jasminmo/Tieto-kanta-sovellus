@@ -10,7 +10,9 @@ db = get_db()
 @bp.route('/')
 def index():
     channels = Channels.query.all()
-    return render_template('channels/index.html', channels=channels)
+    messages = {channel.id: channel.get_messages() for channel in channels}
+    message_counts = {channel.id: len(messages[channel.id]) for channel in channels}
+    return render_template('channels/index.html', channels=channels, messages=messages, message_counts=message_counts)
 
 
 @bp.route('/<int:id>')

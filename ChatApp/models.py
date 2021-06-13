@@ -1,3 +1,4 @@
+from re import S
 from werkzeug.security import generate_password_hash
 from datetime import datetime
 from . import get_db
@@ -71,20 +72,28 @@ def setup_defaults():
     admin = Users(username='admin', password=generate_password_hash('password'), is_admin=True)
     db.session.add(admin)
 
-    user = Users(username='customer', password=generate_password_hash('password'))
-    db.session.add(user)
+    customer = Users(username='customer', password=generate_password_hash('password'))
+    db.session.add(customer)
 
     default_channel = Channels(title='Default', description="This is default channel.", creator=admin)
     db.session.add(default_channel)
 
-    thread1 = Threads(title='Starting thread', creator=admin, channel=default_channel)
-    db.session.add(thread1)
+    for i in range(10):
+        new_channel = Channels(title='Channel ' + str(i+1), description='This is channel number ' + str(i+1), creator=admin)
+        db.session.add(new_channel)
 
-    message1 = Messages(content='H1. How are you?', sender=admin, thread=thread1)
-    db.session.add(message1)
+        for j in range(10):
+            thread = Threads(title='Thread number ' + str(j+1) + ' of channel "' + new_channel.title + '"', creator=admin, channel=new_channel)
+            db.session.add(thread)
 
-    message2 = Messages(content='H2. I\'m fine.', sender=user, thread=thread1, reply_to=message1)
-    db.session.add(message2)
+            starting_message = Messages(content='This is staring message...', sender=customer, thread=thread)
+            db.session.add(starting_message)
+
+            message1 = Messages(content='Hi! How are you?', sender=admin, thread=thread)
+            db.session.add(message1)
+
+            message2 = Messages(content='Hi! I\'m fine.', sender=customer, thread=thread, reply_to=message1)
+            db.session.add(message2)
 
     db.session.commit()
 

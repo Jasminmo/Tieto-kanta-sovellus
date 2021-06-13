@@ -17,7 +17,12 @@
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="justify-content-end">
+        <div class="d-flex justify-content-end align-items-center">
+          <form class="d-flex pe-5" action="search">
+            <input class="form-control me-2" placeholder="Search" aria-label="Search" name="query">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+          <div class="d-flex">
           {% if g.user%}
           <ul class="navbar-nav mb-2 mb-lg-0">
             <span class="text-secondary navbar-text">{% if g.user.admin %}Admin l{% else %} L{% endif %}ogged in as</span>&nbsp;
@@ -41,6 +46,7 @@
           </ul>
           {% endif %}
         </div>
+      </div>
       </div>
     </nav>
     <div class="row">

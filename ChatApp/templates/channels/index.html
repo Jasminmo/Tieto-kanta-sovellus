@@ -6,9 +6,11 @@
     {% for channel in channels %}
       <li>
         <a href="{{ url_for('channels.view_channel', id=channel.id) }}">{{ channel.title }}</a>
-        has {{ channel.threads | count }} threads and {{ channel.get_messages() | count }} messages.
+        has {{ channel.threads | count }} threads and {{ message_counts[channel.id] }} messages.
 
-        Final message sent at {{ channel.get_messages() | map(attribute="send_at") | max }} messages.
+        {% if message_counts[channel.id] > 0 %}
+        Final message sent at {{ messages[channel.id] | map(attribute="send_at") | max }} messages.
+        {% endif %}
         This channel was opened by {{ channel.creator.username }}.
       </li>
     {% endfor %}

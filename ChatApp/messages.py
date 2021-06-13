@@ -72,3 +72,10 @@ def delete(id):
     db.session.delete(message)
     db.session.commit()
     return redirect(url_for('threads.view_thread', id=thread_id))
+
+
+@bp.route('/search', methods=('GET',))
+def search():
+    query = request.args["query"]
+    messages = Messages.query.filter(Messages.content.like('%' + query + '%')).all()
+    return render_template('messages/results.html', messages=messages, search_term=query)

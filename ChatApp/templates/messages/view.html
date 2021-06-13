@@ -1,0 +1,8 @@
+{{ message.id }}: {{ message.send_at }} - {{ message.sender.username }}: {{ message.content }}
+{% if g.user and g.user.id == message.sender.id %}
+  <a href="{{ url_for('messages.edit', id=message.id) }}"><i class="bi bi-pencil-fill"></i></a>
+
+  <form action="{{ url_for('messages.delete', id=message.id) }}" method="post" style="display: inline;">
+    <button class="text-danger btn btn-default"><i class="bi bi-trash-fill"></i></button>
+  </form>
+{% endif %}

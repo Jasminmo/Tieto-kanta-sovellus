@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>{% block title %}Search results for '{{ search_term }}'{% endblock %}</h1>
+  {% if not messages %}
+    <p>Nothing found for '{{ search_term }}'</p>
+  {% else %}
+    <p>{{ messages | count }} messages found.</p>
+  {% endif %}
+  <ul>
+    {% for message in messages %}
+      <li>
+        <a href="{{ url_for('threads.view_thread', id=message.thread_id) }}">{{ message.thread.title }}</a><br>
+        {% include 'messages/view.html' %}
+      </li>
+    {% endfor %}
+  </ul>
+
+{% endblock %}
