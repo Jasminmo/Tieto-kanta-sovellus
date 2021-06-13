@@ -78,15 +78,15 @@ def setup_defaults():
     default_channel = Channels(title='Default', description="This is default channel.", creator=admin)
     db.session.add(default_channel)
 
-    for i in range(10):
+    for i in range(3):
         new_channel = Channels(title='Channel ' + str(i+1), description='This is channel number ' + str(i+1), creator=admin)
         db.session.add(new_channel)
 
-        for j in range(10):
-            thread = Threads(title='Thread number ' + str(j+1) + ' of channel "' + new_channel.title + '"', creator=admin, channel=new_channel)
+        for j in range(4):
+            thread = Threads(title='Thread ' + str(j+1), creator=admin, channel=new_channel)
             db.session.add(thread)
 
-            starting_message = Messages(content='This is staring message...', sender=customer, thread=thread)
+            starting_message = Messages(content='This is staring message of this thread.', sender=customer, thread=thread)
             db.session.add(starting_message)
 
             message1 = Messages(content='Hi! How are you?', sender=admin, thread=thread)

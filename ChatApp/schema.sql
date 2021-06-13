@@ -1,9 +1,3 @@
-DROP TABLE IF EXISTS "messages";
-DROP TABLE IF EXISTS "threads";
-DROP TABLE IF EXISTS "channels";
-DROP TABLE IF EXISTS "admins";
-DROP TABLE IF EXISTS "users";
-
 CREATE TABLE "users" (
   "id" SERIAL PRIMARY KEY,
   "firstname" varchar unique not null,
