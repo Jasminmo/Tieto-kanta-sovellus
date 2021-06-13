@@ -18,6 +18,8 @@ def index():
 @bp.route('/<int:id>')
 def view_channel(id):
     channel = Channels.query.filter(Channels.id == id).first()
+    if channel == None:
+        return render_template('auth/404.html'), 404
     return render_template('channels/view.html', channel=channel)
 
 
@@ -42,8 +44,34 @@ def new():
 
         flash(error)
 
-    return render_template('channels/new.html')
+    return render_template('channels/new.html', channel={}, action_url=url_for('.new'))
 
+
+@bp.route('/<int:id>/edit', methods=('POST','GET'))
+def edit(id):
+    if g.user == None or not g.user.is_admin:
+        return render_template('auth/not_authorized.html'), 401
+
+    channel = Channels.query.filter(Channels.id == id).first()
+    if channel == None:
+        return render_template('auth/404.html'), 404
+    
+    if request.method == 'POST':
+        title = request.form['title']
+        description = request.form['description']
+        error = None
+
+        if not title:
+            error = 'title is required.'
+
+        if error is None:
+            channel.title = title
+            channel.description = description
+            db.session.add(channel)
+            db.session.commit()
+            return redirect(url_for('.view_channel', id=channel.id))
+
+    return render_template('channels/edit.html', channel=channel, action_url=url_for('.edit', id=id))
 
 @bp.route('/<int:id>/delete', methods=('POST',))
 def delete(id):

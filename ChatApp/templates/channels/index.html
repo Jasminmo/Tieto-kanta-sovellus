@@ -2,22 +2,40 @@
 
 {% block content %}
   <h1>{% block title %}Channels{% endblock %}</h1>
-  <ul>
-    {% for channel in channels %}
-      <li>
-        <a href="{{ url_for('channels.view_channel', id=channel.id) }}">{{ channel.title }}</a>
-        has {{ channel.threads | count }} threads and {{ message_counts[channel.id] }} messages.
 
-        {% if message_counts[channel.id] > 0 %}
-        Final message sent at {{ messages[channel.id] | map(attribute="send_at") | max }} messages.
-        {% endif %}
-        This channel was opened by {{ channel.creator.username }}.
-      </li>
-    {% endfor %}
-  </ul>
+  <div class="mb-5">
+    <p>There are {{channels | count }} channels.</p>
 
   {% if g.user and g.user.is_admin %}
-    <a href="{{ url_for('channels.new') }}" class="btn btn-primary">new</a>
+    <a href="{{ url_for('channels.new') }}" class="btn btn-primary">add channel</a>
   {% endif %}
+
+  </div>
+
+  {% for channel in channels %}
+  <div class="card mb-2 border-dark col-6">
+    <div class="card-body">
+
+      <h4 class="card-title">
+        {{ channel.title }}
+      </h4>
+      <h6 class="card-subtitle">
+        by {{ channel.creator.username }} on {{ channel.created_at.strftime('%a %h %d %Y %H:%M') }}
+      </h6>
+      <dif class="card-text">
+        <p>
+          This channel has {{ channel.threads | count }} threads and {{ message_counts[channel.id] }} messages.
+        </p>
+        {% if message_counts[channel.id] > 0 %}
+          <p>
+            Final message was sent at {{ messages[channel.id] | map(attribute="send_at") | max | timeformat }}.
+          </p>
+        {% endif %}
+      </dif>
+
+      <a href="{{ url_for('channels.view_channel', id=channel.id) }}" class="btn btn-primary">View</a>
+    </div>
+  </div>
+  {% endfor %}
 
 {% endblock %}

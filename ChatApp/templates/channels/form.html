@@ -1,0 +1,13 @@
+<form method="post" value="{{channel.title}}" action="{{action_url}}" class="col-4">
+  <div class="mb-3">
+    <label for="title">Title</label>
+    <input class="form-control" name="title" id="title" value="{{channel.title}}" required>
+  </div>
+  <div class="mb-3">
+    <label for="description">Description</label>
+    <textarea class="form-control" name="description" id="description">{{channel.description}}</textarea>
+  </div>
+  <div class="mb-3">
+    <input class="btn btn-primary" type="submit" value="Create">
+  </div>
+</form>
