@@ -7,13 +7,17 @@
   {% else %}
     <p>{{ messages | count }} messages found.</p>
   {% endif %}
-  <ul>
-    {% for message in messages %}
-      <li>
-        <a href="{{ url_for('threads.view_thread', id=message.thread_id) }}">{{ message.thread.title }}</a><br>
-        {% include 'messages/view.html' %}
-      </li>
-    {% endfor %}
-  </ul>
+
+  {% for message in messages %}
+  <div class="card mb-2">
+    <div class="card-header d-flex">
+      {% include 'messages/header.html' %}
+    </div>
+  
+    <div class="card-body">
+      {% include 'messages/content.html' %}
+    </div>
+  </div>
+  {% endfor %}
 
 {% endblock %}

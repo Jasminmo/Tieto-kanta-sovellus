@@ -18,8 +18,8 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="d-flex justify-content-end align-items-center">
-          <form class="d-flex pe-5" action="search">
-            <input class="form-control me-2" placeholder="Search" aria-label="Search" name="query">
+          <form class="d-flex pe-5" action="/search">
+            <input class="form-control me-2" placeholder="Search messages" aria-label="Search" name="query">
             <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
           <div class="d-flex">
@@ -54,8 +54,8 @@
         <h1>
           {% block header %} {% endblock %}
         </h1>
-        {% for message in get_flashed_messages() %}
-        <div class="message">{{ message }}</div>
+        {% for error in get_flashed_messages() %}
+        <div class="error">{{ error }}</div>
         {% endfor %}
         {% block content %} {% endblock %}
       </div>

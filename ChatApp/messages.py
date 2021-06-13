@@ -77,5 +77,5 @@ def delete(id):
 @bp.route('/search', methods=('GET',))
 def search():
     query = request.args["query"]
-    messages = Messages.query.filter(Messages.content.like('%' + query + '%')).all()
+    messages = Messages.query.filter(Messages.content.like('%' + query + '%')).order_by(Messages.send_at).all()
     return render_template('messages/results.html', messages=messages, search_term=query)
