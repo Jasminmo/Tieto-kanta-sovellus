@@ -4,7 +4,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import get_db
 from .models import Messages, Threads
-from .forms import NewThreadForm, UpdateThreadForm
+from .forms import NewThreadForm, UpdateThreadForm, MessageForm
+from ChatApp import forms
 
 bp = Blueprint('threads', __name__, url_prefix='/threads')
 db = get_db()
@@ -15,7 +16,7 @@ def view(id):
     thread = Threads.query.filter(Threads.id == id).first()
     if thread == None:
         return render_template('auth/404.html'), 404
-    return render_template('threads/view.html', thread=thread)
+    return render_template('threads/view.html', thread=thread, form=MessageForm(request.form))
 
 
 @bp.route('/new/<int:channel_id>', methods=('GET', 'POST'))

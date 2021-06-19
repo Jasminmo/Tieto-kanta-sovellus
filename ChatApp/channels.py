@@ -2,6 +2,7 @@ from flask import Blueprint, flash, g, redirect, render_template, request, sessi
 from werkzeug.security import check_password_hash, generate_password_hash
 from . import get_db
 from .models import Channels
+from .forms import ChannelForm
 
 bp = Blueprint('channels', __name__, url_prefix='/channels')
 db = get_db()
@@ -28,25 +29,16 @@ def new():
     if g.user == None or not g.user.is_admin:
         return render_template('auth/not_authorized.html'), 401
 
-    if request.method == 'POST':
-        title = request.form['title']
-        description = request.form['title']
-        error = None
+    form = ChannelForm(request.form)
+    if form.validate_on_submit():
+        channel = Channels(title=form.title.data, description=form.description.data, creator=g.user)
+        db.session.add(channel)
+        db.session.commit()
 
-        if not title:
-            error = 'title is required.'
+        flash('Created a new channel!', 'success')
+        return redirect(url_for('.view', id=channel.id))
 
-        if error is None:
-            channel = Channels(title=title, description=description, creator=g.user)
-            db.session.add(channel)
-            db.session.commit()
-
-            flash('Created a new channel!', 'success')
-            return redirect(url_for('.view', id=channel.id))
-
-        flash(error)
-
-    return render_template('channels/new.html', channel={}, action_url=url_for('.new'))
+    return render_template('channels/new.html', action_url=url_for('.new'), form=form)
 
 
 @bp.route('/<int:id>/edit', methods=('POST','GET'))
@@ -58,24 +50,20 @@ def edit(id):
     if channel == None:
         return render_template('auth/404.html'), 404
     
-    if request.method == 'POST':
-        title = request.form['title']
-        description = request.form['description']
-        error = None
+    form = ChannelForm(request.form)
+    if request.method == 'GET':
+        form.title.data = channel.title
+        form.description.data = channel.description
+    if form.validate_on_submit():
+        channel.title = form.title.data
+        channel.description = form.description.data
+        db.session.add(channel)
+        db.session.commit()
 
-        if not title:
-            error = 'title is required.'
+        flash('The channel has been updated!', 'success')
+        return redirect(url_for('.view', id=channel.id))
 
-        if error is None:
-            channel.title = title
-            channel.description = description
-            db.session.add(channel)
-            db.session.commit()
-
-            flash('The channel has been updated!', 'success')
-            return redirect(url_for('.view', id=channel.id))
-
-    return render_template('channels/edit.html', channel=channel, action_url=url_for('.edit', id=id))
+    return render_template('channels/edit.html', form=form, action_url=url_for('.edit', id=id))
 
 @bp.route('/<int:id>/delete', methods=('POST',))
 def delete(id):

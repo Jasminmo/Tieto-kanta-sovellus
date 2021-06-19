@@ -2,7 +2,8 @@ from ChatApp import channels
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 from . import get_db
-from .models import Channels, Messages, Threads
+from .models import Messages, Threads
+from .forms import MessageForm
 
 bp = Blueprint('messages', __name__)
 db = get_db()
@@ -13,27 +14,20 @@ def send(thread_id):
     if g.user == None:
         return render_template('auth/not_authorized.html'), 401
 
-    if request.method == 'POST':
-        content = request.form['message']
-        thread = Threads.query.filter(Threads.id == thread_id).first()
-        if thread == None:
-            return render_template('auth/404.html'), 404
+    thread = Threads.query.filter(Threads.id == thread_id).first()
+    if thread == None:
+        return render_template('auth/404.html'), 404
 
-        error = None
-        if not content:
-            error = 'message is required.'
+    form = MessageForm(request.form)
+    if form.validate_on_submit():
+        message = Messages(content=form.content.data, thread=thread, sender=g.user)
+        db.session.add(message)
+        db.session.commit()
 
-        if error is None:
-            message = Messages(content=content, thread=thread, sender=g.user)
-            db.session.add(thread)
-            db.session.commit()
+        flash('Your message has been send!', 'success')
+        return redirect(url_for('threads.view', id=thread.id))
 
-            flash('Your message has been send!', 'success')
-            return redirect(url_for('threads.view', id=thread.id))
-
-        flash(error)
-
-    return render_template('messages/new.html')
+    return render_template('messages/new.html', action_url=url_for('.new'), form=form)
 
 @bp.route('/messages/edit/<int:id>', methods=('GET', 'POST'))
 def edit(id):
@@ -44,24 +38,18 @@ def edit(id):
     if g.user == None or message.sender.id != g.user.id:
         return render_template('auth/not_authorized.html'), 401
 
-    if request.method == 'POST':
-        content = request.form['message']
+    form = MessageForm(request.form)
+    if request.method == 'GET':
+        form.content.data = message.content
+    elif form.validate_on_submit():
+        message.content = form.content.data
+        db.session.add(message)
+        db.session.commit()
 
-        error = None
-        if not content:
-            error = 'message is required.'
+        flash('Your message has been updated!', 'success')
+        return redirect(url_for('threads.view', id=message.thread.id))
 
-        if error is None:
-            message.content = content
-            db.session.add(message)
-            db.session.commit()
-
-            flash('Your message has been updated!', 'success')
-            return redirect(url_for('threads.view', id=message.thread.id))
-
-        flash(error)
-
-    return render_template('messages/edit.html', message=message)
+    return render_template('messages/edit.html', form=form)
 
 
 @bp.route('/messages/delete/<int:id>', methods=('POST',))

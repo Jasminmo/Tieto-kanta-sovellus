@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1>
   {% block title %}
     {% if g.user.admin %}
       Create new user account
@@ -9,25 +8,44 @@
       Register
     {% endif %}
   {% endblock %}
-</h1>
 {% endblock %}
 
 {% block content %}
   <form method="post" class="col-4">
+    {{ form.csrf_token }}
     <div class="mb-3">
-      <label for="username">Username</label>
-      <input class="form-control" name="username" id="username" required>
+      {{ form.username.label(class="form-label") }}
+      {% if form.username.errors %}
+        {{ form.username(class="form-control is-invalid") }}
+        {% for error in form.username.errors %}
+          <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+      {% else %}
+        {{ form.username(class="form-control") }}
+      {% endif %}
     </div>
     <div class="mb-3">
-      <label for="password">Password</label>
-      <input class="form-control" type="password" name="password" id="password" required>
+      {{ form.password.label(class="form-label") }}
+      {% if form.password.errors %}
+        {{ form.password(class="form-control is-invalid") }}
+        {% for error in form.password.errors %}
+          <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+      {% else %}
+        {{ form.password(class="form-control") }}
+      {% endif %}
     </div>
     {% if g.user.admin %}
     <div class="mb-3">
-      <input class="form-check-input" type="checkbox" value="true" name="admin" id="admin">
-      <label class="form-check-label" for="flexCheckDefault">
-        is admin
-      </label>
+      {{ form.is_admin.label(class="form-label") }}
+      {% if form.is_admin.errors %}
+        {{ form.is_admin(class="form-control is-invalid") }}
+        {% for error in form.is_admin.errors %}
+          <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+      {% else %}
+        {{ form.is_admin(class="form-control") }}
+      {% endif %}
     </div>
     {% endif %}
     <div class="mb-3">

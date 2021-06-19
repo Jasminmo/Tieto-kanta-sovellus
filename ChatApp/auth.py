@@ -1,7 +1,9 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 from . import get_db
+from .forms import UserForm
 from .models import Users
+from ChatApp import forms
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 db = get_db()
@@ -21,58 +23,39 @@ def load_logged_in_user():
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+    form = UserForm(request.form)
+    if form.validate_on_submit():
+        username = form.username.data
+        if db.session.execute('SELECT id FROM users WHERE username = :username', {"username": username}).fetchone() is not None:
+            flash(f"User {username} is already registered", 'danger')
+            return render_template('auth/register.html', form=form)
 
-        admin = g.user != None and 'admin' in request.form
-        error = None
+        user = Users(username=username, password=generate_password_hash(form.password.data), is_admin=form.is_admin.data)
+        db.session.add(user)
+        db.session.commit()
 
-        if not username:
-            error = 'Username is required.'
-        elif not password:
-            error = 'Password is required.'
-        elif db.session.execute(
-            'SELECT id FROM users WHERE username = :username', {"username": username}
-        ).fetchone() is not None:
-            error = f"User {username} is already registered."
+        flash('Thanks for registering!', 'success')
+        return redirect(url_for('auth.login'))
 
-        if error is None:
-            user = Users(username=username, password=generate_password_hash(password), is_admin=admin)
-            db.session.add(user)
-            db.session.commit()
-
-            flash('Thanks for registering!', 'success')
-            return redirect(url_for('auth.login'))
-
-        flash(error)
-
-    return render_template('auth/register.html')
+    return render_template('auth/register.html', form=form)
 
 
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        error = None
-        user = Users.query.filter(Users.username == username).first()
+    form = UserForm(request.form)
+    if form.validate_on_submit():
+        user = Users.query.filter(Users.username == form.username.data).first()
 
-        if user is None:
-            error = 'Incorrect username.'
-        elif not check_password_hash(user.password, password):
-            error = 'Incorrect password.'
-
-        if error is None:
+        if user is None or not check_password_hash(user.password, form.password.data):
+            flash('Incorrect username or password.', 'danger')
+        else:
             session.clear()
             session['user_id'] = user.id
-            flash('Logged in as ' + username + '!', 'info')
+            flash('Logged in as ' + user.username + '!', 'info')
             return redirect(url_for('index'))
 
-        flash(error)
-
-    return render_template('auth/login.html')
+    return render_template('auth/login.html', form=form)
 
 
 @bp.route("/logout")

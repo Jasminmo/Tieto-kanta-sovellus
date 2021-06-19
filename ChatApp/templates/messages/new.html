@@ -1,7 +1,9 @@
 {% block form %}
   <form method="post" action="{{ url_for('messages.send', thread_id=thread.id) }}" style="margin-top: 30px;">
+    {{ form.csrf_token }}
     <div class="mb-3">
-      <textarea class="form-control" placeholder="Type you massage here" rows="3" name="message" id="message" required></textarea>
+      {{ form.content.label(class="form-label") }}
+      {{ form.content(class="form-control", placeholder="Type you massage here") }}
       <button class="btn btn-primary" type="submit" style="display: block; width: 100%;">
         Send <i class="bi bi-arrow-right-square-fill"></i>
       </button>

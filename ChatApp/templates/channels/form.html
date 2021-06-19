@@ -1,11 +1,25 @@
-<form method="post" value="{{channel.title}}" action="{{action_url}}" class="col-4">
+<form method="post" action="{{action_url}}" class="col-4">
+  {{ form.csrf_token }}
   <div class="mb-3">
-    <label for="title">Title</label>
-    <input class="form-control" name="title" id="title" value="{{channel.title}}" required>
-  </div>
+    {{ form.title.label(class="form-label") }}
+    {% if form.title.errors %}
+      {{ form.title(class="form-control is-invalid") }}
+      {% for error in form.title.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    {% else %}
+      {{ form.title(class="form-control") }}
+    {% endif %}
   <div class="mb-3">
-    <label for="description">Description</label>
-    <textarea class="form-control" name="description" id="description">{{channel.description}}</textarea>
+    {{ form.description.label(class="form-label") }}
+    {% if form.description.errors %}
+      {{ form.description(class="form-control is-invalid") }}
+      {% for error in form.description.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    {% else %}
+      {{ form.description(class="form-control") }}
+    {% endif %}
   </div>
   <div class="mb-3">
     <input class="btn btn-primary" type="submit" value="Create">
