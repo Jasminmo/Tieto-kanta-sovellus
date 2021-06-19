@@ -50,7 +50,7 @@ def edit(id):
             error = 'message is required.'
 
         if error is None:
-            message = Messages(content=content, sender=g.user, thread=message.thread)
+            message.content = content
             db.session.add(message)
             db.session.commit()
             return redirect(url_for('threads.view_thread', id=message.thread.id))
