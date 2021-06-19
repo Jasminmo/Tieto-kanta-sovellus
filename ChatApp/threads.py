@@ -9,7 +9,7 @@ db = get_db()
 
 
 @bp.route('/<int:id>')
-def view_thread(id):
+def view(id):
     thread = Threads.query.filter(Threads.id == id).first()
     if thread == None:
         return render_template('auth/404.html'), 404
@@ -39,7 +39,7 @@ def new(channel_id):
             message = Messages(content=content, thread=thread, sender=g.user)
             db.session.add(thread)
             db.session.commit()
-            return redirect(url_for('.view_thread', id=thread.id))
+            return redirect(url_for('.view', id=thread.id))
 
         flash(error)
 
@@ -65,7 +65,7 @@ def edit(id):
             thread.title = title
             db.session.add(thread)
             db.session.commit()
-            return redirect(url_for('.view_thread', id=thread.id))
+            return redirect(url_for('.view', id=thread.id))
 
         flash(error)
 
@@ -83,5 +83,5 @@ def delete(id):
     channel_id = thread.channel.id
     db.session.delete(thread)
     db.session.commit()
-    return redirect(url_for('channels.view_channel', id=channel_id))
+    return redirect(url_for('channels.view', id=channel_id))
 

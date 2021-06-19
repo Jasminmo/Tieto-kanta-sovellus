@@ -16,7 +16,7 @@ def index():
 
 
 @bp.route('/<int:id>')
-def view_channel(id):
+def view(id):
     channel = Channels.query.filter(Channels.id == id).first()
     if channel == None:
         return render_template('auth/404.html'), 404
@@ -40,7 +40,7 @@ def new():
             channel = Channels(title=title, description=description, creator=g.user)
             db.session.add(channel)
             db.session.commit()
-            return redirect(url_for('.view_channel', id=channel.id))
+            return redirect(url_for('.view', id=channel.id))
 
         flash(error)
 
@@ -69,7 +69,7 @@ def edit(id):
             channel.description = description
             db.session.add(channel)
             db.session.commit()
-            return redirect(url_for('.view_channel', id=channel.id))
+            return redirect(url_for('.view', id=channel.id))
 
     return render_template('channels/edit.html', channel=channel, action_url=url_for('.edit', id=id))
 

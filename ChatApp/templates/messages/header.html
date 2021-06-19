@@ -1,6 +1,6 @@
 <div>
   <h4 class="card-title">
-    <a href="{{ url_for('threads.view_thread', id=message.thread.id) }}">{{ message.thread.title }}</a>
+    <a href="{{ url_for('threads.view', id=message.thread.id) }}">{{ message.thread.title }}</a>
   </h4>
   <h6 class="card-subtitle">
     by {{ message.sender.username }} on {{ message.send_at.strftime('%a %h %d %Y %H:%M') }}

@@ -6,7 +6,7 @@
   <ul>
     {% for thread in g.user.threads %}
       <li>
-        <a href="{{ url_for('threads.view_thread', id=thread.id) }}">{{ thread.title }}</a>
+        <a href="{{ url_for('threads.view', id=thread.id) }}">{{ thread.title }}</a>
           has {{ thread.messages | count }} messages
       </li>
     {% endfor %}
