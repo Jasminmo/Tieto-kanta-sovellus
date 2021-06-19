@@ -25,7 +25,7 @@ def new(channel_id):
 
     form = NewThreadForm(request.form)
     if form.validate_on_submit():
-        thread = Threads(title=form.title.data, channel_id=id, creator=g.user)
+        thread = Threads(title=form.title.data, channel_id=channel_id, creator=g.user)
         db.session.add(thread)
         db.session.commit()
 
@@ -33,7 +33,7 @@ def new(channel_id):
         db.session.add(message)
         db.session.commit()
 
-        flash('You created a new thread', 'success')
+        flash('Created a new thread!', 'success')
         return redirect(url_for('.view', id=thread.id))
 
     return render_template('threads/new.html', form=form)
@@ -44,7 +44,7 @@ def edit(id):
     thread = Threads.query.filter(Threads.id == id).first()
     if thread == None:
         return render_template('auth/404.html'), 404
-    if g.user == None or g.user.id != thread.creator.id:
+    elif g.user == None or g.user.id != thread.creator.id:
         return render_template('auth/not_authorized.html'), 401
 
     form = UpdateThreadForm(request.form)
@@ -54,6 +54,8 @@ def edit(id):
         thread.title = form.title.data
         db.session.add(thread)
         db.session.commit()
+
+        flash('The thread has been updated!', 'success')
         return redirect(url_for('.view', id=thread.id))
 
     return render_template('threads/edit.html', form=form)
@@ -64,11 +66,13 @@ def delete(id):
     thread = Threads.query.filter(Threads.id == id).first()
     if thread == None:
         return render_template('auth/404.html'), 404
-    if g.user == None or not (g.user.is_admin or (g.user.id == thread.creator.id)):
+    elif g.user == None or not (g.user.is_admin or (g.user.id == thread.creator.id)):
         return render_template('auth/not_authorized.html'), 401
 
     channel_id = thread.channel.id
     db.session.delete(thread)
     db.session.commit()
+
+    flash('Deleted thread!', 'success')
     return redirect(url_for('channels.view', id=channel_id))
 
