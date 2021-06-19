@@ -1,14 +1,22 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1>Edit thread</h1>
+Edit thread
 {% endblock %}
 
 {% block content %}
   <form method="post" class="col-4">
+    {{ form.csrf_token }}
     <div class="mb-3">
-      <label for="title">Title</label>
-      <input class="form-control" name="title" id="title" value="{{ thread.title }}" required>
+      {{ form.title.label(class="form-label") }}
+      {% if form.title.errors %}
+        {{ form.title(class="form-control is-invalid") }}
+        {% for error in form.title.errors %}
+          <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+      {% else %}
+        {{ form.title(class="form-control") }}
+      {% endif %}
     </div>
     <div class="mb-3">
       <input class="btn btn-primary" type="submit" value="Update">

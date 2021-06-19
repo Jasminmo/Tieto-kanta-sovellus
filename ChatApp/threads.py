@@ -1,8 +1,10 @@
 from ChatApp import channels
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
+
 from . import get_db
-from .models import Channels, Messages, Threads
+from .models import Messages, Threads
+from .forms import NewThreadForm, UpdateThreadForm
 
 bp = Blueprint('threads', __name__, url_prefix='/threads')
 db = get_db()
@@ -21,29 +23,20 @@ def new(channel_id):
     if g.user == None:
         return render_template('auth/not_authorized.html'), 401
 
-    if request.method == 'POST':
-        title = request.form['title']
-        content = request.form['message']
-        channel = Channels.query.filter(Channels.id == channel_id).first()
-        error = None
+    form = NewThreadForm(request.form)
+    if form.validate_on_submit():
+        thread = Threads(title=form.title.data, channel_id=id, creator=g.user)
+        db.session.add(thread)
+        db.session.commit()
 
-        if not title:
-            error = 'title is required.'
-        if not content:
-            error = 'message is required.'
-        if channel is None:
-            error = f"Channel {channel_id} is not found."
+        message = Messages(content=form.content.data, thread=thread, sender=g.user)
+        db.session.add(message)
+        db.session.commit()
 
-        if error is None:
-            thread = Threads(title=title, channel_id=channel_id, creator=g.user)
-            message = Messages(content=content, thread=thread, sender=g.user)
-            db.session.add(thread)
-            db.session.commit()
-            return redirect(url_for('.view', id=thread.id))
+        flash('You created a new thread', 'success')
+        return redirect(url_for('.view', id=thread.id))
 
-        flash(error)
-
-    return render_template('threads/new.html')
+    return render_template('threads/new.html', form=form)
 
 
 @bp.route('/edit/<int:id>', methods=('GET', 'POST'))
@@ -54,22 +47,16 @@ def edit(id):
     if g.user == None or g.user.id != thread.creator.id:
         return render_template('auth/not_authorized.html'), 401
 
-    if request.method == 'POST':
-        title = request.form['title']
-        error = None
+    form = UpdateThreadForm(request.form)
+    if request.method == 'GET':
+        form.title.data = thread.title
+    elif form.validate_on_submit():
+        thread.title = form.title.data
+        db.session.add(thread)
+        db.session.commit()
+        return redirect(url_for('.view', id=thread.id))
 
-        if not title:
-            error = 'title is required.'
-
-        if error is None:
-            thread.title = title
-            db.session.add(thread)
-            db.session.commit()
-            return redirect(url_for('.view', id=thread.id))
-
-        flash(error)
-
-    return render_template('threads/edit.html', thread=thread)
+    return render_template('threads/edit.html', form=form)
 
 
 @bp.route('/<int:id>/delete', methods=('POST',))
