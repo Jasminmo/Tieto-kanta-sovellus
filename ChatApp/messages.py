@@ -27,6 +27,8 @@ def send(thread_id):
             message = Messages(content=content, thread=thread, sender=g.user)
             db.session.add(thread)
             db.session.commit()
+
+            flash('Your message has been send!', 'success')
             return redirect(url_for('threads.view', id=thread.id))
 
         flash(error)
@@ -53,6 +55,8 @@ def edit(id):
             message.content = content
             db.session.add(message)
             db.session.commit()
+
+            flash('Your message has been updated!', 'success')
             return redirect(url_for('threads.view', id=message.thread.id))
 
         flash(error)
@@ -71,6 +75,8 @@ def delete(id):
     thread_id = message.thread.id
     db.session.delete(message)
     db.session.commit()
+
+    flash('Your message has been deleted!', 'success')
     return redirect(url_for('threads.view', id=thread_id))
 
 

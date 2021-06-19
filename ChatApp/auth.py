@@ -41,6 +41,8 @@ def register():
             user = Users(username=username, password=generate_password_hash(password), is_admin=admin)
             db.session.add(user)
             db.session.commit()
+
+            flash('Thanks for registering!', 'success')
             return redirect(url_for('auth.login'))
 
         flash(error)
@@ -65,6 +67,7 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user.id
+            flash('Logged in as ' + username + '!', 'info')
             return redirect(url_for('index'))
 
         flash(error)
@@ -76,4 +79,5 @@ def login():
 def logout():
     """Clear the current session, including the stored user id."""
     session.clear()
+    flash('You have logged out!', 'info')
     return redirect(url_for("index"))

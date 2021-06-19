@@ -40,6 +40,8 @@ def new():
             channel = Channels(title=title, description=description, creator=g.user)
             db.session.add(channel)
             db.session.commit()
+
+            flash('Created a new channel!', 'success')
             return redirect(url_for('.view', id=channel.id))
 
         flash(error)
@@ -69,6 +71,8 @@ def edit(id):
             channel.description = description
             db.session.add(channel)
             db.session.commit()
+
+            flash('The channel has been updated!', 'success')
             return redirect(url_for('.view', id=channel.id))
 
     return render_template('channels/edit.html', channel=channel, action_url=url_for('.edit', id=id))
@@ -81,5 +85,7 @@ def delete(id):
     channel = Channels.query.filter(Channels.id == id).first()
     db.session.delete(channel)
     db.session.commit()
+
+    flash('Deleted channel!', 'success')
     return redirect(url_for('.index'))
 
