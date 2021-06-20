@@ -7,14 +7,12 @@
     {% endblock %}
 
   {% if g.user %}
-  <form class="justify-content-center" action="{{ url_for('.delete', id=channel.id) }}" method="post">
     {% if g.user.is_admin %}
       <a href="{{ url_for('.edit', id=channel.id) }}" class="me-1 btn btn-primary"><i class="bi bi-pencil-fill"></i></a>
-      <button class="btn btn-danger" type="submit"><i class="bi bi-trash-fill"></i></button>
+      <button type="button" data-bs-action="{{ url_for('channels.delete', id=channel.id) }}" data-bs-type="channel" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
     {% endif %}
-  </form>
 {% endif %}
-  </h1>
+</h1>
 {% endblock %}
 
 {% block content %}
