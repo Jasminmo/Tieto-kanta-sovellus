@@ -5,7 +5,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from . import get_db
 from .models import Messages, Threads
 from .forms import NewThreadForm, UpdateThreadForm, MessageForm
-from ChatApp import forms
+from .auth import is_logged_in
+from .channels import can_view_channel
 
 bp = Blueprint('threads', __name__, url_prefix='/threads')
 db = get_db()
@@ -14,14 +15,14 @@ db = get_db()
 @bp.route('/<int:id>')
 def view(id):
     thread = Threads.query.filter(Threads.id == id).first()
-    if thread == None:
+    if thread == None or not can_view_channel(thread.channel):
         return render_template('auth/404.html'), 404
     return render_template('threads/view.html', thread=thread, form=MessageForm(request.form))
 
 
 @bp.route('/new/<int:channel_id>', methods=('GET', 'POST'))
 def new(channel_id):
-    if g.user == None:
+    if not is_logged_in():
         return render_template('auth/not_authorized.html'), 401
 
     form = NewThreadForm(request.form)
@@ -45,7 +46,7 @@ def edit(id):
     thread = Threads.query.filter(Threads.id == id).first()
     if thread == None:
         return render_template('auth/404.html'), 404
-    elif g.user == None or g.user.id != thread.creator.id:
+    elif not is_logged_in() or g.user.id != thread.creator.id:
         return render_template('auth/not_authorized.html'), 401
 
     form = UpdateThreadForm(request.form)
@@ -67,7 +68,7 @@ def delete(id):
     thread = Threads.query.filter(Threads.id == id).first()
     if thread == None:
         return render_template('auth/404.html'), 404
-    elif g.user == None or not (g.user.is_admin or (g.user.id == thread.creator.id)):
+    elif not is_logged_in() or not (g.user.is_admin or (g.user.id == thread.creator.id)):
         return render_template('auth/not_authorized.html'), 401
 
     channel_id = thread.channel.id

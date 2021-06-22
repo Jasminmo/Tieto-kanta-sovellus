@@ -3,35 +3,50 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from . import get_db
 from .models import Channels
 from .forms import ChannelForm
+from .auth import is_admin, is_logged_in
 
 bp = Blueprint('channels', __name__, url_prefix='/channels')
 db = get_db()
 
 
+def can_view_channel(channel):
+    if is_admin(): return True
+    if not is_logged_in(): return False
+    user_ids = list(map(lambda u: u.id, channel.secret_users))
+    return is_logged_in() and g.user.id in user_ids
+
+
 @bp.route('/')
 def index():
-    channels = Channels.query.all()
-    messages = {channel.id: channel.get_messages() for channel in channels}
-    message_counts = {channel.id: len(messages[channel.id]) for channel in channels}
+    channels = []
+    messages = {}
+    message_counts = {}
+    for channel in Channels.query.all():
+        if channel.is_secret and not can_view_channel(channel):
+            continue
+        channels.append(channel)
+        messages[channel.id] = channel.get_messages()
+        message_counts[channel.id] = len(messages[channel.id])
+
     return render_template('channels/index.html', channels=channels, messages=messages, message_counts=message_counts)
 
 
 @bp.route('/<int:id>')
 def view(id):
     channel = Channels.query.filter(Channels.id == id).first()
-    if channel == None:
+    if channel == None or not can_view_channel(channel):
         return render_template('auth/404.html'), 404
     return render_template('channels/view.html', channel=channel)
 
 
 @bp.route('/new', methods=('GET', 'POST'))
 def new():
-    if g.user == None or not g.user.is_admin:
+    if not is_admin():
         return render_template('auth/not_authorized.html'), 401
 
     form = ChannelForm(request.form)
     if form.validate_on_submit():
-        channel = Channels(title=form.title.data, description=form.description.data, creator=g.user)
+        channel = Channels(title=form.title.data, description=form.description.data, is_secret=form.is_secret.data, creator=g.user)
         db.session.add(channel)
         db.session.commit()
 
@@ -43,17 +58,18 @@ def new():
 
 @bp.route('/<int:id>/edit', methods=('POST','GET'))
 def edit(id):
-    if g.user == None or not g.user.is_admin:
+    if not is_admin():
         return render_template('auth/not_authorized.html'), 401
 
     channel = Channels.query.filter(Channels.id == id).first()
     if channel == None:
         return render_template('auth/404.html'), 404
-    
+
     form = ChannelForm(request.form)
     if request.method == 'GET':
         form.title.data = channel.title
         form.description.data = channel.description
+        form.is_secret.data = channel.is_secret
     if form.validate_on_submit():
         channel.title = form.title.data
         channel.description = form.description.data
@@ -63,11 +79,11 @@ def edit(id):
         flash('The channel has been updated!', 'success')
         return redirect(url_for('.view', id=channel.id))
 
-    return render_template('channels/edit.html', form=form, action_url=url_for('.edit', id=id))
+    return render_template('channels/edit.html', form=form, action_url=url_for('.edit', id=id), is_edit=True)
 
 @bp.route('/<int:id>/delete', methods=('POST',))
 def delete(id):
-    if g.user == None or not g.user.is_admin:
+    if not is_admin():
         return render_template('auth/not_authorized.html'), 401
 
     channel = Channels.query.filter(Channels.id == id).first()

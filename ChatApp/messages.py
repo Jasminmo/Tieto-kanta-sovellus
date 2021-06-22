@@ -4,6 +4,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from . import get_db
 from .models import Messages, Threads
 from .forms import MessageForm
+from .auth import is_logged_in
+from .channels import can_view_channel
 
 bp = Blueprint('messages', __name__)
 db = get_db()
@@ -11,11 +13,11 @@ db = get_db()
 
 @bp.route('/threads/<int:thread_id>/send/', methods=('GET', 'POST'))
 def send(thread_id):
-    if g.user == None:
+    if not is_logged_in():
         return render_template('auth/not_authorized.html'), 401
 
     thread = Threads.query.filter(Threads.id == thread_id).first()
-    if thread == None:
+    if thread == None or not can_view_channel(thread.channel):
         return render_template('auth/404.html'), 404
 
     form = MessageForm(request.form)
@@ -32,10 +34,10 @@ def send(thread_id):
 @bp.route('/messages/edit/<int:id>', methods=('GET', 'POST'))
 def edit(id):
     message = Messages.query.filter(Messages.id == id).first()
-    if message == None:
+    if message == None or not can_view_channel(message.thread.channel):
         return render_template('auth/404.html'), 404
 
-    if g.user == None or message.sender.id != g.user.id:
+    if not is_logged_in() or message.sender.id != g.user.id:
         return render_template('auth/not_authorized.html'), 401
 
     form = MessageForm(request.form)
@@ -55,7 +57,7 @@ def edit(id):
 @bp.route('/messages/delete/<int:id>', methods=('POST',))
 def delete(id):
     message = Messages.query.filter(Messages.id == id).first()
-    if message == None:
+    if not is_logged_in() or not can_view_channel(message.thread.channel):
         return render_template('auth/404.html'), 404
     if g.user == None or g.user.id != message.sender.id:
         return render_template('auth/not_authorized.html'), 401
@@ -71,5 +73,11 @@ def delete(id):
 @bp.route('/search', methods=('GET',))
 def search():
     query = request.args["query"]
-    messages = Messages.query.filter(Messages.content.like('%' + query + '%')).order_by(Messages.send_at).all()
+    results = Messages.query.filter(Messages.content.like('%' + query + '%')).order_by(Messages.send_at).all()
+    messages = []
+    print(messages)
+    for message in results:
+        if not can_view_channel(message.thread.channel):
+            continue
+        messages.append(message)
     return render_template('messages/results.html', messages=messages, search_term=query)

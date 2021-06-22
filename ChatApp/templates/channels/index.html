@@ -20,6 +20,7 @@
         {{ channel.title }}
       </h4>
       <h6 class="card-subtitle">
+        {% if channel.is_secret %}<span class="small badge text-white bg-danger">Secret</span>{% endif %}
         by {{ channel.creator.username }} on {{ channel.created_at.strftime('%a %h %d %Y %H:%M') }}
       </h6>
       <dif class="card-text">
@@ -33,7 +34,7 @@
         {% endif %}
       </dif>
 
-      <a href="{{ url_for('channels.view', id=channel.id) }}" class="btn btn-primary">View</a>
+      <a href="{{ url_for('channels.view', id=channel.id) }}" class="btn btn-info">View</a>
     </div>
   </div>
   {% endfor %}

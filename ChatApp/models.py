@@ -1,4 +1,3 @@
-from re import S
 from werkzeug.security import generate_password_hash
 from datetime import datetime
 from . import get_db
@@ -16,11 +15,19 @@ class Users(db.Model):
         return '<User %r >' % self.username
 
 
+secret_channel_users = db.Table('secret_channel_users',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('channel_id', db.Integer, db.ForeignKey('channels.id'), primary_key=True)
+)
+
+
 class Channels(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False)
     description = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    is_secret = db.Column(db.Boolean(), unique=False, nullable=False, default=False)
+    secret_users = db.relationship('Users', secondary=secret_channel_users)
 
     creator_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     creator = db.relationship('Users', backref=db.backref('channels', lazy=True, cascade="all, delete"))
@@ -77,7 +84,18 @@ def setup_defaults():
     customer = Users(username='customer', password=generate_password_hash('password'))
     db.session.add(customer)
 
+    user1 = Users(username='user1', password=generate_password_hash('password'))
+    db.session.add(user1)
+
+    user2 = Users(username='user2', password=generate_password_hash('password'))
+    db.session.add(user2)
+
     default_channel = Channels(title='Default', description="This is default channel.", creator=admin)
+    db.session.add(default_channel)
+
+    secret_channel = Channels(title='Secret', description="This is secret channel.", creator=admin, is_secret=True)
+    secret_channel.secret_users.append(user1)
+    secret_channel.secret_users.append(user2)
     db.session.add(default_channel)
 
     for i in range(4):

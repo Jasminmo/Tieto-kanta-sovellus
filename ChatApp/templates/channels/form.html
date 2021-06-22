@@ -10,6 +10,7 @@
     {% else %}
       {{ form.title(class="form-control") }}
     {% endif %}
+  </div>
   <div class="mb-3">
     {{ form.description.label(class="form-label") }}
     {% if form.description.errors %}
@@ -22,6 +23,16 @@
     {% endif %}
   </div>
   <div class="mb-3">
-    <input class="btn btn-primary" type="submit" value="Create">
+    <div style="display: inline;" data-bs-toggle="tooltip" data-bs-placement="right" title="{% if is_edit %}Can't edit{% else %}Set this channel to private{% endif %}">
+      {{ form.is_secret.label(class="form-check-label") }}
+      {% if is_edit %}
+          {{ form.is_secret(class="form-check-input", disabled=True) }}
+      {% else %}
+        {{ form.is_secret(class="form-check-input") }}
+      {% endif %}
+    </div>
+  </div>
+  <div class="mb-3">
+    <input class="btn btn-primary" type="submit" value="Send">
   </div>
 </form>

@@ -9,6 +9,14 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 db = get_db()
 
 
+def is_logged_in():
+    return g.user != None
+
+
+def is_admin():
+    return is_logged_in() and g.user.is_admin
+
+
 @bp.before_app_request
 def load_logged_in_user():
     """If a user id is stored in the session, load the user object from

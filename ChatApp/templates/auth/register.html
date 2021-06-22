@@ -38,14 +38,7 @@
     {% if g.user.admin %}
     <div class="mb-3">
       {{ form.is_admin.label(class="form-label") }}
-      {% if form.is_admin.errors %}
-        {{ form.is_admin(class="form-control is-invalid") }}
-        {% for error in form.is_admin.errors %}
-          <div class="invalid-feedback">{{ error }}</div>
-        {% endfor %}
-      {% else %}
-        {{ form.is_admin(class="form-control") }}
-      {% endif %}
+      {{ form.is_admin(class="form-control") }}
     </div>
     {% endif %}
     <div class="mb-3">
