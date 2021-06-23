@@ -57,6 +57,12 @@ class Threads(db.Model):
         return '<Threads %r>' % self.title
 
 
+likes_table = db.Table('likes',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('message_id', db.Integer, db.ForeignKey('messages.id'), primary_key=True)
+)
+
+
 class Messages(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=True)
@@ -70,6 +76,8 @@ class Messages(db.Model):
 
     reply_to_id = db.Column(db.Integer, db.ForeignKey('messages.id'), nullable=True)
     replies = db.relationship('Messages', backref=db.backref('reply_to', remote_side=[id]))
+
+    likes = db.relationship('Users', secondary=likes_table)
 
     def __repr__(self):
         return '<Messages %r>' % self.content

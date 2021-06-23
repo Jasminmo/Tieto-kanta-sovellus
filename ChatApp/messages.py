@@ -1,6 +1,4 @@
-from ChatApp import channels
-from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
-from werkzeug.security import check_password_hash, generate_password_hash
+from flask import Blueprint, flash, g, redirect, render_template, request, url_for
 from . import get_db
 from .models import Messages, Threads
 from .forms import MessageForm
@@ -81,3 +79,41 @@ def search():
             continue
         messages.append(message)
     return render_template('messages/results.html', messages=messages, search_term=query)
+
+
+@bp.route('/messages/like/<int:id>', methods=('POST',))
+def like(id):
+    if not is_logged_in():
+        return render_template('auth/not_authorized.html'), 401
+
+    message = Messages.query.filter(Messages.id == id).first()
+    if message == None:
+        return render_template('auth/404.html'), 404
+
+    if g.user not in message.likes:
+        message.likes.append(g.user)
+        db.session.add(message)
+        db.session.commit()
+        flash('You have liked this message!', 'success')
+    else:
+        flash('You have already liked this message!', 'info')
+    return redirect(url_for('threads.view', id=message.thread.id))
+
+
+@bp.route('/messages/unlike/<int:id>', methods=('POST',))
+def unlike(id):
+    if not is_logged_in():
+        return render_template('auth/not_authorized.html'), 401
+
+    message = Messages.query.filter(Messages.id == id).first()
+    if message == None:
+        return render_template('auth/404.html'), 404
+
+    if g.user in message.likes:
+        message.likes.remove(g.user)
+        db.session.add(message)
+        db.session.commit()
+        flash('You have removed your like from this message!', 'success')
+    else:
+        flash('You have not liked this message yet!', 'success')
+    return redirect(url_for('threads.view', id=message.thread.id))

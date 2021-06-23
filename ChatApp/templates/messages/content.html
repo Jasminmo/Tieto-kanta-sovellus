@@ -1,7 +1,9 @@
   <div>{{ message.content }}</div>
   <div class="nav justify-content-end">
-  {% if g.user and g.user.id == message.sender.id %}
-    <a class="text-primary btn btn-default" href="{{ url_for('messages.edit', id=message.id) }}"><i class="bi bi-pencil-fill"></i></a>
-    <button type="button" data-bs-action="{{ url_for('messages.delete', id=message.id) }}" data-bs-type="message" data-bs-toggle="modal" data-bs-target="#deleteModal" class="text-danger btn btn-default"><i class="bi bi-trash-fill"></i></button>
+  {% if g.user %}
+    {% if g.user.id == message.sender.id %}
+      <a class="text-primary btn btn-default" href="{{ url_for('messages.edit', id=message.id) }}"><i class="bi bi-pencil-fill"></i></a>
+      <button type="button" data-bs-action="{{ url_for('messages.delete', id=message.id) }}" data-bs-type="message" data-bs-toggle="modal" data-bs-target="#deleteModal" class="text-danger btn btn-default"><i class="bi bi-trash-fill"></i></button>
+    {% endif %}
   {% endif %}
   </div>
