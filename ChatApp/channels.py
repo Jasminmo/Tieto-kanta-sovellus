@@ -1,5 +1,4 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
-from werkzeug.security import check_password_hash, generate_password_hash
 from . import get_db
 from .models import Channels, Users
 from .forms import ChannelForm, ChannelSettingsForm
@@ -10,8 +9,12 @@ db = get_db()
 
 
 def can_view_channel(channel):
-    if is_admin(): return True
-    if not is_logged_in(): return False
+    if channel == None:
+        return False
+    if is_admin() or not channel.is_secret:
+        return True
+    if not is_logged_in():
+        return False
     user_ids = list(map(lambda u: u.id, channel.secret_users))
     return is_logged_in() and g.user.id in user_ids
 
@@ -22,7 +25,7 @@ def index():
     messages = {}
     message_counts = {}
     for channel in Channels.query.all():
-        if channel.is_secret and not can_view_channel(channel):
+        if not can_view_channel(channel):
             continue
         channels.append(channel)
         messages[channel.id] = channel.get_messages()
@@ -34,7 +37,7 @@ def index():
 @bp.route('/<int:id>')
 def view(id):
     channel = Channels.query.filter(Channels.id == id).first()
-    if channel == None or not can_view_channel(channel):
+    if not can_view_channel(channel):
         return render_template('auth/404.html'), 404
     return render_template('channels/view.html', channel=channel)
 
