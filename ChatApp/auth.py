@@ -3,7 +3,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from . import get_db
 from .forms import UserForm
 from .models import Users
-from ChatApp import forms
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 db = get_db()

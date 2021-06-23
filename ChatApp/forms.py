@@ -13,6 +13,10 @@ class ChannelForm(FlaskForm):
     is_secret = BooleanField('Is secret', validators=[validators.optional()])
 
 
+class ChannelSettingsForm(FlaskForm):
+    username = StringField('Username', validators=[validators.required(), validators.Length(min=5, max=40)])
+
+
 class NewThreadForm(FlaskForm):
     title = StringField('Title', validators=[validators.required(), validators.Length(min=5, max=40)])
     content = TextAreaField('Message', validators=[validators.required(), validators.Length(min=1, max=200)])

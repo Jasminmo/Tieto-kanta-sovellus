@@ -1,8 +1,8 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
 from . import get_db
-from .models import Channels
-from .forms import ChannelForm
+from .models import Channels, Users
+from .forms import ChannelForm, ChannelSettingsForm
 from .auth import is_admin, is_logged_in
 
 bp = Blueprint('channels', __name__, url_prefix='/channels')
@@ -80,6 +80,65 @@ def edit(id):
         return redirect(url_for('.view', id=channel.id))
 
     return render_template('channels/edit.html', form=form, action_url=url_for('.edit', id=id), is_edit=True)
+
+
+@bp.route('/<int:id>/settings', methods=('POST','GET'))
+def settings(id):
+    if not is_admin():
+        return render_template('auth/not_authorized.html'), 401
+
+    form = ChannelSettingsForm(request.form)
+    channel = Channels.query.filter(Channels.id == id).first()
+    if channel == None:
+        return render_template('auth/404.html'), 404
+
+    return render_template('channels/settings.html', form=form, channel=channel, action_url=url_for('.settings', id=id))
+
+
+@bp.route('/<int:id>/add-user', methods=('POST','GET'))
+def add_user_to_list(id):
+    if not is_admin():
+        return render_template('auth/not_authorized.html'), 401
+
+    channel = Channels.query.filter(Channels.id == id).first()
+    if channel == None:
+        return render_template('auth/404.html'), 404
+
+    form = ChannelSettingsForm(request.form)
+    if form.validate_on_submit():
+        user = Users.query.filter(Users.username == form.username.data).first()
+        if user == None:
+            form.username.errors.append("Username not found!")
+        elif user.is_admin:
+            form.username.errors.append("The user " + user.username + " is admin!")
+        else:
+            channel.secret_users.append(user)
+            db.session.add(channel)
+            db.session.commit()
+            flash('The user has been added to channel list!', 'success')
+            return redirect(url_for('.settings', id=id))
+    return render_template('channels/settings.html', form=form, channel=channel, action_url=url_for('.settings', id=id))
+
+
+@bp.route('/<int:channel_id>/remove-user/<int:user_id>', methods=('POST','GET'))
+def remove_user_from_list(channel_id, user_id):
+    if not is_admin():
+        return render_template('auth/not_authorized.html'), 401
+
+    channel = Channels.query.filter(Channels.id == channel_id).first()
+    if channel == None:
+        return render_template('auth/404.html'), 404
+
+    user = Users.query.filter(Users.id == user_id).first()
+    if user == None:
+        return render_template('auth/404.html'), 404
+
+    channel.secret_users.remove(user)
+    db.session.add(channel)
+    db.session.commit()
+    flash('The user has been removed from channel list!', 'success')
+    return redirect(url_for('.settings', id=channel_id))
+
 
 @bp.route('/<int:id>/delete', methods=('POST',))
 def delete(id):

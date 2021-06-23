@@ -18,6 +18,6 @@ Sovellukseen voi kirjautua joko
 - [x] Käyttäjä voi muokata luomansa ketjun otsikkoa sekä lähettämänsä viestin sisältöä. Käyttäjä voi myös poistaa ketjun tai viestin.
 - [x] Käyttäjä voi etsiä kaikki viestit, joiden osana on annettu sana.
 - [x] Ylläpitäjä voi lisätä ja poistaa keskustelualueita.
-- [ ] Ylläpitäjä voi luoda salaisen alueen ja määrittää, keillä käyttäjillä on pääsy alueelle
+- [x] Ylläpitäjä voi luoda salaisen alueen ja määrittää, keillä käyttäjillä on pääsy alueelle
 
 ## Sovelluksen [Määrittelydokumentti](./documentation/README.md)

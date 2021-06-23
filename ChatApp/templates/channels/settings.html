@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit settings{% endblock %}
+
+{% block header %}
+Edit settings: 
+<a href="{{ url_for('.view', id=channel.id)}}">{{channel.title}}</a>
+{% endblock %}
+
+{% block content %}
+  {% if channel.is_secret %}
+    <hr>
+    <h4>Add users to hidden channel</h4>
+    <form method="post" action="{{ url_for('.add_user_to_list', id=channel.id)}}" class="row row-cols-lg-auto g-3 align-items-center">
+      {{ form.csrf_token }}
+      <div class="mb-3">
+      {% if form.username.errors %}
+        {{ form.username(class="form-control is-invalid") }}
+        {% for error in form.username.errors %}
+          <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+      {% else %}
+        {{ form.username(class="form-control") }}
+      {% endif %}
+      </div>
+      <div class="mb-3">
+        <input class="btn btn-primary" type="submit" value="Add">
+      </div>
+    </form>
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title">Added users</h5>
+      </div>
+      <table class="table mb-0">
+        <tbody>
+          {% for user in channel.secret_users %}
+            <tr>
+                <td>{{user.username}}</td>
+                <td align="right"><a href="{{ url_for('.remove_user_from_list', channel_id=channel.id, user_id=user.id)}}" class="btn btn-close me-0"></a></td>
+            </tr> 
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    Nothing to set!
+  {% endif %}
+{% endblock %}

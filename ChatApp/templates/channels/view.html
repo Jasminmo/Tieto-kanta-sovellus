@@ -6,12 +6,11 @@
       {{ channel.title }}
     {% endblock %}
 
-  {% if g.user %}
-    {% if g.user.is_admin %}
+  {% if g.user and g.user.is_admin %}
       <a href="{{ url_for('.edit', id=channel.id) }}" class="me-1 btn btn-primary"><i class="bi bi-pencil-fill"></i></a>
+      <a href="{{ url_for('.settings', id=channel.id) }}" class="me-1 btn btn-primary"><i class="bi bi-gear-fill"></i></a>
       <button type="button" data-bs-action="{{ url_for('channels.delete', id=channel.id) }}" data-bs-type="channel" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
-    {% endif %}
-{% endif %}
+  {% endif %}
 </h1>
 {% endblock %}
 
