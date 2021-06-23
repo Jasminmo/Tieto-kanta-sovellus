@@ -12,8 +12,10 @@
 
   </div>
 
-  {% for channel in channels %}
-  <div class="card mb-2 border-dark col-6">
+<div class="row row-cols-1 row-cols-md-2 g-4">
+{% for channel in channels %}
+<div class="col">
+  <div class="card border-dark h-100">
     <div class="card-body">
 
       <h4 class="card-title">
@@ -23,20 +25,23 @@
         {% if channel.is_secret %}<span class="small badge text-white bg-danger">Secret</span>{% endif %}
         by {{ channel.creator.username }} on {{ channel.created_at.strftime('%a %h %d %Y %H:%M') }}
       </h6>
-      <dif class="card-text">
+      <div class="card-text">
         <p>
           This channel has {{ channel.threads | count }} threads and {{ message_counts[channel.id] }} messages.
         </p>
+        <p>
         {% if message_counts[channel.id] > 0 %}
-          <p>
             Final message was sent at {{ messages[channel.id] | map(attribute="send_at") | max | timeformat }}.
-          </p>
         {% endif %}
-      </dif>
-
+        </p>
+      </div>
+    </div>
+    <div class="card-footer">
       <a href="{{ url_for('channels.view', id=channel.id) }}" class="btn btn-info">View</a>
     </div>
   </div>
-  {% endfor %}
+</div>
+{% endfor %}
+</div>
 
 {% endblock %}

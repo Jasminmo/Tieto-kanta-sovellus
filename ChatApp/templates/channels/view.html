@@ -24,9 +24,10 @@
 
 </div>
 
-
-{% for thread in channel.threads %}
-  <div class="card mb-2 border-dark">
+<ul class="list-group list-group-flush col-6">
+  {% for thread in channel.threads %}
+  <li class="list-group-item">
+  <div class="card mb-2 border-light">
     <div class="card-body">
 
       <h4 class="card-title">
@@ -48,9 +49,10 @@
       </dif>
 
       </div>
-      <a href="{{ url_for('threads.view', id=thread.id) }}" class="btn btn-primary">View</a>
+      <a href="{{ url_for('threads.view', id=thread.id) }}" class="card-link">View</a>
     </div>
   </div>
+  </li>
   {% endfor %}
-
+</ul>
 {% endblock %}

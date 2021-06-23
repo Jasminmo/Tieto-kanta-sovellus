@@ -10,7 +10,8 @@
 
 <body>
   <div class="container">
-    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+    <div class="offset-1 col-10">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-secondary bg-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">ChatApp</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -20,16 +21,16 @@
         <div class="d-flex justify-content-end align-items-center">
           <form class="d-flex pe-5" action="/search">
             <input class="form-control me-2" placeholder="Search messages" aria-label="Search" name="query" required>
-            <button class="btn btn-outline-success" type="submit">Search</button>
+            <button class="btn btn-primary" type="submit">Search</button>
           </form>
           <div class="d-flex">
           {% if g.user%}
           <ul class="navbar-nav mb-2 mb-lg-0">
             <span class="text-secondary navbar-text">{% if g.user.admin %}Admin l{% else %} L{% endif %}ogged in as</span>&nbsp;
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+              <a class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                 aria-expanded="false">
-                <span class="text-primary">{{ g.user['username'] }}</span> <i class="bi bi-person-circle"></i> </a>
+                  <span class="text-light">{{ g.user['username'] }}</span> <i class="bi bi-person-fill"></i></a>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{{ url_for('mypage.threads') }}"><i class="bi bi-menu-up"></i> &nbsp; Threads </a></li>
                 <li>
@@ -50,7 +51,6 @@
       </div>
     </nav>
     <div class="row">
-      <div class="col-12">
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
               {% for category, message in messages %}
@@ -61,19 +61,19 @@
               {% endfor %}
           {% endif %}
         {% endwith %}
-      </div>
     </div>
 
-    <div class="row">
+    <div class="row" style="padding: 0 15px;">
       <h1>
         {% block header %} {% endblock %}
       </h1>
-      <div class="col-6">
+      <div>
         {% block content %} {% endblock %}
       </div>
     </div>
 
   </div>
+</div>
 
   {% include 'delete-modal.html' %}
 
