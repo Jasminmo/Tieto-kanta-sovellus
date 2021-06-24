@@ -1,6 +1,4 @@
-from ChatApp import channels
-from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
-from werkzeug.security import check_password_hash, generate_password_hash
+from flask import Blueprint, flash, g, redirect, render_template, request, url_for
 
 from . import get_db
 from .models import Messages, Threads

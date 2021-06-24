@@ -2,7 +2,7 @@ import os
 from os import getenv
 
 from flask import Flask
-from flask import redirect, render_template, request
+from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
 
 SQL = None
