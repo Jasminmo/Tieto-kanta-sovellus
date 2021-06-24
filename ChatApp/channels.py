@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
+from flask import Blueprint, flash, g, redirect, render_template, request, url_for
 from . import get_db
 from .models import Channels, Users
 from .forms import ChannelForm, ChannelSettingsForm
@@ -39,7 +39,7 @@ def view(id):
     channel = Channels.query.filter(Channels.id == id).first()
     if not can_view_channel(channel):
         return render_template('auth/404.html'), 404
-    return render_template('channels/view.html', channel=channel)
+    return render_template('channels/view.html', channel=channel, ratings=channel.ratings())
 
 
 @bp.route('/new', methods=('GET', 'POST'))
@@ -155,3 +155,24 @@ def delete(id):
     flash('Deleted channel!', 'success')
     return redirect(url_for('.index'))
 
+@bp.route('/rate/<int:id>/<int:value>', methods=('GET', ))
+def rate(id, value):
+    if not is_logged_in():
+        flash('Login before rating!', 'error')
+        return render_template('auth/not_authorized.html'), 401
+
+    channel = Channels.query.filter(Channels.id == id).first()
+    if channel == None:
+        return render_template('auth/404.html'), 404
+
+    #form = ChannelRatingForm(request.form)
+    #if form.validate_on_submit():
+
+    channel.rate(g.user, value)
+    db.session.add(channel)
+    db.session.commit()
+
+    flash('You have rated this channel with ' + str(value) + ' starts!', 'success')
+    return redirect(url_for('.view', id=id))
+
+    #return render_template('channels/new.html', action_url=url_for('.new'), form=form)

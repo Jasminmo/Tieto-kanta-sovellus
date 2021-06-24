@@ -20,6 +20,11 @@ secret_channel_users = db.Table('secret_channel_users',
     db.Column('channel_id', db.Integer, db.ForeignKey('channels.id'), primary_key=True)
 )
 
+channel_ratings = db.Table('channel_ratings',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+    db.Column('channel_id', db.Integer, db.ForeignKey('channels.id'), primary_key=True),
+    db.Column('rating', db.Integer, nullable=False)
+)
 
 class Channels(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,9 +33,43 @@ class Channels(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     is_secret = db.Column(db.Boolean(), unique=False, nullable=False, default=False)
     secret_users = db.relationship('Users', secondary=secret_channel_users)
-
+    raters = db.relationship("Users", secondary=channel_ratings)
     creator_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     creator = db.relationship('Users', backref=db.backref('channels', lazy=True, cascade="all, delete"))
+
+    def rate(self, user, value):
+        print(self)
+        print(user)
+        fetch = 'select * from channel_ratings where user_id = :user_id and channel_id = :channel_id'
+        result = db.session.execute(fetch, {"user_id": user.id, "channel_id": self.id}).fetchall()
+        print(result)
+        if len(result) == 0:
+            insert = 'insert into channel_ratings (user_id, channel_id, rating) values (:user_id, :channel_id, :value)'
+            result = db.session.execute(insert, {"user_id": user.id, "channel_id": self.id, "value": int(value)})
+            print(result)
+        else:
+            insert = 'update channel_ratings set rating=:value where user_id=:user_id and channel_id=:channel_id'
+            result = db.session.execute(insert, {"user_id": user.id, "channel_id": self.id, "value": int(value)})
+            print(result)
+
+    def ratings(self):
+        fetch = 'select round(avg(rating),2) as mean, count(rating) as count from channel_ratings where channel_id = :channel_id'
+        result = db.session.execute(fetch, {"channel_id": self.id}).fetchall()[0]
+        ratings = {'mean': str(result[0]), 'count': result[1]}
+        print(ratings)
+        return ratings
+    
+
+    def rating(self, user):
+        fetch = 'select rating from channel_ratings where channel_id = :channel_id and user_id=:user_id'
+        result = db.session.execute(fetch, {"channel_id": self.id, "user_id": user.id}).fetchall()
+        if len(result) == 0:
+            return None
+        rating = result[0][0]
+        rating_class = ['','','','','']
+        for i in range(rating):
+            rating_class[i] = '-fill'
+        return rating_class
 
     def __repr__(self):
         return '<Channel %r>' % self.title

@@ -7,7 +7,13 @@
       {% if g.user %}
         {% if g.user in message.likes %}
           <form action="{{ url_for('messages.unlike', id=message.id) }}" method="POST">
-            <button class="text-secondary btn btn-default"><i class="bi bi-hand-thumbs-up-fill"></i></button>
+            <button class="text-secondary btn btn-default position-relative">
+              <i class="bi bi-hand-thumbs-up-fill"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ message.likes | count }}
+                <span class="visually-hidden">likes</span>
+              </span>
+            </button>
           </form>
         {% else %}
           <form action="{{ url_for('messages.like', id=message.id) }}" method="POST">

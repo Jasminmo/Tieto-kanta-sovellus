@@ -16,6 +16,24 @@
 
 {% block content %}
 
+<div>
+  {% if ratings['count'] > 0 %}
+    <p>Channel has {{ ratings['mean'] }} / 5.00 rating ({{ ratings['count'] }} ratings).</p>
+  {% else %}
+    <p>Channel has not yet been rated.</p>
+  {% endif %}
+
+  {% set rating_class = channel.rating(g.user) %}
+
+  <p>Rate:
+    <a href="{{ url_for('.rate', id=channel.id, value=1) }}" class=""><i class="bi bi-star{{ rating_class[0] }}"></i></a>
+    <a href="{{ url_for('.rate', id=channel.id, value=2) }}" class=""><i class="bi bi-star{{ rating_class[1] }}"></i></a>
+    <a href="{{ url_for('.rate', id=channel.id, value=3) }}" class=""><i class="bi bi-star{{ rating_class[2] }}"></i></a>
+    <a href="{{ url_for('.rate', id=channel.id, value=4) }}" class=""><i class="bi bi-star{{ rating_class[3] }}"></i></a>
+    <a href="{{ url_for('.rate', id=channel.id, value=5) }}" class=""><i class="bi bi-star{{ rating_class[4] }}"></i></a>
+  </p>
+</div>
+
 <div class="mb-5">
   {% if channel.description %}
   <p>{{ channel.description }}</p>

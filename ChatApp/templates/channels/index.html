@@ -34,6 +34,12 @@
             Final message was sent at {{ messages[channel.id] | map(attribute="send_at") | max | timeformat }}.
         {% endif %}
         </p>
+        <p>
+        {% set ratings=channel.ratings() %}
+        {% if ratings['count'] > 0 %}
+            Channel has {{ ratings['mean'] }} / 5.00 rating ({{ ratings['count'] }} users rated).
+        {% endif %}
+        </p>
       </div>
     </div>
     <div class="card-footer">
