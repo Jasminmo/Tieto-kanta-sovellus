@@ -1,26 +1,27 @@
 <div class="card mb-2">
-  <div class="card-header d-flex">
+  <div class="card-header">
     <h6 class="card-subtitle">
       by {{ message.sender.username }} on {{ message.send_at.strftime('%a %h %d %Y %H:%M') }}
     </h6>
     <div class="nav justify-content-end">
-      {% if g.user %}
-        {% if g.user in message.likes %}
-          <form action="{{ url_for('messages.unlike', id=message.id) }}" method="POST">
-            <button class="text-secondary btn btn-default position-relative">
-              <i class="bi bi-hand-thumbs-up-fill"></i>
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                {{ message.likes | count }}
-                <span class="visually-hidden">likes</span>
-              </span>
-            </button>
-          </form>
-        {% else %}
-          <form action="{{ url_for('messages.like', id=message.id) }}" method="POST">
-            <button class="text-primary btn btn-default"><i class="bi bi-hand-thumbs-up-fill"></i></button>
-          </form>
-        {% endif %}
+      {% if g.user and g.user in message.likes %}
+        {% set action = url_for('messages.unlike', id=message.id) %}
+        {% set style = 'secondary' %}
+      {% else %}
+        {% set action = url_for('messages.like', id=message.id) %}
+        {% set style = 'primary' %}
       {% endif %}
+
+        <form action="{{ action }}" method="POST">
+          {% if message.likes | count > 0 %}
+            <span class="badge bg-info">{{ message.likes | count }} likes</span>
+          {% else %}
+            <span class="badge bg-info">No likes</span>
+          {% endif %}
+          <button class="text-{{style}} btn btn-default position-relative">
+            <i class="bi bi-hand-thumbs-up-fill"></i>
+          </button>
+        </form>
     </div>
   </div>
 
