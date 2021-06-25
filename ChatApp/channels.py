@@ -158,7 +158,7 @@ def delete(id):
 @bp.route('/rate/<int:id>/<int:value>', methods=('GET', ))
 def rate(id, value):
     if not is_logged_in():
-        flash('Login before rating!', 'error')
+        flash('Login before rating!', 'danger')
         return render_template('auth/not_authorized.html'), 401
 
     channel = Channels.query.filter(Channels.id == id).first()
@@ -174,5 +174,3 @@ def rate(id, value):
 
     flash('You have rated this channel with ' + str(value) + ' starts!', 'success')
     return redirect(url_for('.view', id=id))
-
-    #return render_template('channels/new.html', action_url=url_for('.new'), form=form)

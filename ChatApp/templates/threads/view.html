@@ -15,8 +15,10 @@
     {% endif %}
   </div>
 </h1>
+<p>by {{ thread.creator.username }} on {{ thread.created_at.strftime('%a %h %d %Y %H:%M') }}</p>
 
 <hr>
+  <h4>Messages in this thread</h4>
     {% for message in thread.messages %}
         {% include 'messages/view.html' %}
     {% endfor %}

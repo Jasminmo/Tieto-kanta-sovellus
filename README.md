@@ -17,6 +17,8 @@ Sovellukseen voi kirjautua joko
 - [x] Käyttäjä voi kirjoittaa uuden viestin olemassa olevaan ketjuun.
 - [x] Käyttäjä voi muokata luomansa ketjun otsikkoa sekä lähettämänsä viestin sisältöä. Käyttäjä voi myös poistaa ketjun tai viestin.
 - [x] Käyttäjä voi etsiä kaikki viestit, joiden osana on annettu sana.
+- [x] Käyttäjä voi tykätä viesteistä.
+- [x] Käyttäjä voi arvioda kanavia.
 - [x] Ylläpitäjä voi lisätä ja poistaa keskustelualueita.
 - [x] Ylläpitäjä voi luoda salaisen alueen ja määrittää, keillä käyttäjillä on pääsy alueelle
 

@@ -9,8 +9,6 @@
   </head>
 
 <body>
-  <div class="container">
-    <div class="offset-1 col-10">
     <nav class="navbar sticky-top navbar-expand-lg navbar-secondary bg-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">ChatApp</a>
@@ -50,6 +48,7 @@
       </div>
       </div>
     </nav>
+  <div class="container">
     <div class="row">
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
@@ -71,8 +70,6 @@
         {% block content %} {% endblock %}
       </div>
     </div>
-
-  </div>
 </div>
 
   {% include 'delete-modal.html' %}

@@ -7,9 +7,13 @@
     {% endblock %}
 
   {% if g.user and g.user.is_admin %}
-      <a href="{{ url_for('.edit', id=channel.id) }}" class="me-1 btn btn-primary"><i class="bi bi-pencil-fill"></i></a>
+    <a href="{{ url_for('.edit', id=channel.id) }}" class="me-1 btn btn-primary"><i class="bi bi-pencil-fill"></i></a>
+
+    {% if channel.is_secret %}
       <a href="{{ url_for('.settings', id=channel.id) }}" class="me-1 btn btn-primary"><i class="bi bi-gear-fill"></i></a>
-      <button type="button" data-bs-action="{{ url_for('channels.delete', id=channel.id) }}" data-bs-type="channel" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
+    {% endif %}
+
+    <button type="button" data-bs-action="{{ url_for('channels.delete', id=channel.id) }}" data-bs-type="channel" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-danger"><i class="bi bi-trash-fill"></i></button>
   {% endif %}
 </h1>
 {% endblock %}
@@ -23,15 +27,16 @@
     <p>Channel has not yet been rated.</p>
   {% endif %}
 
-  {% set rating_class = channel.rating(g.user) %}
-
-  <p>Rate:
-    <a href="{{ url_for('.rate', id=channel.id, value=1) }}" class=""><i class="bi bi-star{{ rating_class[0] }}"></i></a>
-    <a href="{{ url_for('.rate', id=channel.id, value=2) }}" class=""><i class="bi bi-star{{ rating_class[1] }}"></i></a>
-    <a href="{{ url_for('.rate', id=channel.id, value=3) }}" class=""><i class="bi bi-star{{ rating_class[2] }}"></i></a>
-    <a href="{{ url_for('.rate', id=channel.id, value=4) }}" class=""><i class="bi bi-star{{ rating_class[3] }}"></i></a>
-    <a href="{{ url_for('.rate', id=channel.id, value=5) }}" class=""><i class="bi bi-star{{ rating_class[4] }}"></i></a>
-  </p>
+  {% if g.user %}
+    {% set rating_class = channel.rating(g.user) %}
+    <p>Rate:
+      <a href="{{ url_for('.rate', id=channel.id, value=1) }}" class=""><i class="bi bi-star{{ rating_class[0] }}"></i></a>
+      <a href="{{ url_for('.rate', id=channel.id, value=2) }}" class=""><i class="bi bi-star{{ rating_class[1] }}"></i></a>
+      <a href="{{ url_for('.rate', id=channel.id, value=3) }}" class=""><i class="bi bi-star{{ rating_class[2] }}"></i></a>
+      <a href="{{ url_for('.rate', id=channel.id, value=4) }}" class=""><i class="bi bi-star{{ rating_class[3] }}"></i></a>
+      <a href="{{ url_for('.rate', id=channel.id, value=5) }}" class=""><i class="bi bi-star{{ rating_class[4] }}"></i></a>
+    </p>
+  {% endif %}
 </div>
 
 <div class="mb-5">
@@ -42,35 +47,32 @@
 
 </div>
 
+{% if channel.threads | count > 0 %}
+<h4>Threads in this channel</h4>
 <ul class="list-group list-group-flush col-6">
   {% for thread in channel.threads %}
   <li class="list-group-item">
-  <div class="card mb-2 border-light">
-    <div class="card-body">
+    <div class="card mb-2 border-primary">
+      <div class="card-body">
 
-      <h4 class="card-title">
-        {{ thread.title }}
-      </h4>
-      <h6 class="card-subtitle">
-        by {{ thread.creator.username }} on {{ thread.created_at.strftime('%a %h %d %Y %H:%M') }}
-      </h6>
+        <h4 class="card-title">{{ thread.title }}</h4>
+        <h6 class="card-subtitle">by {{ thread.creator.username }} on {{ thread.created_at.strftime('%a %h %d %Y %H:%M') }}</h6>
 
-      <div class="card-text">
-        <p>
-          Thread has {{ thread.messages | count }} messages.
-        </p>
-        {% if thread.messages | length > 0 %}
-          <p>
-            Final message was sent at {{ thread.messages | map(attribute="send_at") | max | timeformat }}.
-          </p>
-        {% endif %}
-      </dif>
+        <div class="card-text">
+            <p>Thread has {{ thread.messages | count }} messages.</p>
+          {% if thread.messages | length > 0 %}
+            <p>Final message was sent at {{ thread.messages | map(attribute="send_at") | max | timeformat }}.</p>
+          {% endif %}
+        </dif>
 
+        </div>
+        <a href="{{ url_for('threads.view', id=thread.id) }}" class="card-link">View</a>
       </div>
-      <a href="{{ url_for('threads.view', id=thread.id) }}" class="card-link">View</a>
     </div>
-  </div>
   </li>
   {% endfor %}
 </ul>
+{% else %}
+<h4>This channel has no threads!</h4>
+{% endif %}
 {% endblock %}

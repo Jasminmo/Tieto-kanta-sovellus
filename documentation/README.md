@@ -16,29 +16,38 @@
 
 ## Use cases
 
-### User
+### A visitor to the site
+- [x] Visitors can register, log in, and log out.
+- [x] A visitor can see a list of channels on the front page of the application.
+- [x] The list of channels contains the number of threads and messages in each channel,
+      the time of the last message sent, and the average rating channel has given.
 
-#### Login and browse channels
-- [x] Users can register, log in, and log out.
-- [x] The user sees a list of channels on the front page of the application.
-- [x] The list of channels contains the number of threads and messages in each channel and the time of the last message sent.
+- [x] A visitor can browse channels and their threads.
+- [x] A visitor can see and search messages.
+- [x] A visitor can see the number of likes a message has recieved.
+
+### Logged in user
+
+#### Channels
+- [x] A logged in user can rate a channel.
 
 <img src="./img/use-cases/user-browse.jpeg">
 
-#### Manage threads
-- [x] The user can create a new thread to a given channel.
-- [x] The created thread has a first message linked to it.
-- [x] The user can edit the title of the thread he has created.
-- [x] The user can delete the thread he has created.
+#### Threads
+- [x] A logged in user can create a new thread linked to a channel.
+- [x] The created thread has first message linked to it.
+- [x] The logged in user can edit the title of the thread he has created.
+- [x] The logged in user can delete the thread he has created.
 
 <img src="./img/use-cases/user-threads.jpeg">
 
 
 #### Messaging
-- [x] The user can search for messages.
-- [x] The user can send a message to an existing thread.
-- [x] The user can edit the content of the message he has sent.
-- [x] The user can delete the message he has sent.
+- [x] A logged in user can send a message to any existing public thread.
+- [x] The logged in user can edit the content of the message he has sent.
+- [x] The logged in user can delete any message he has sent.
+- [x] The logged in user can like any message.
+- [x] The logged in user can remove like from any previously liked message.
 
 <img src="./img/use-cases/user-msg.jpeg">
 

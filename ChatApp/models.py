@@ -30,7 +30,7 @@ class Channels(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False)
     description = db.Column(db.Text, nullable=True)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     is_secret = db.Column(db.Boolean(), unique=False, nullable=False, default=False)
     secret_users = db.relationship('Users', secondary=secret_channel_users)
     raters = db.relationship("Users", secondary=channel_ratings)
@@ -38,29 +38,27 @@ class Channels(db.Model):
     creator = db.relationship('Users', backref=db.backref('channels', lazy=True, cascade="all, delete"))
 
     def rate(self, user, value):
-        print(self)
-        print(user)
+        if user == None:
+            return None
         fetch = 'select * from channel_ratings where user_id = :user_id and channel_id = :channel_id'
         result = db.session.execute(fetch, {"user_id": user.id, "channel_id": self.id}).fetchall()
-        print(result)
         if len(result) == 0:
             insert = 'insert into channel_ratings (user_id, channel_id, rating) values (:user_id, :channel_id, :value)'
             result = db.session.execute(insert, {"user_id": user.id, "channel_id": self.id, "value": int(value)})
-            print(result)
         else:
             insert = 'update channel_ratings set rating=:value where user_id=:user_id and channel_id=:channel_id'
             result = db.session.execute(insert, {"user_id": user.id, "channel_id": self.id, "value": int(value)})
-            print(result)
 
     def ratings(self):
         fetch = 'select round(avg(rating),2) as mean, count(rating) as count from channel_ratings where channel_id = :channel_id'
         result = db.session.execute(fetch, {"channel_id": self.id}).fetchall()[0]
         ratings = {'mean': str(result[0]), 'count': result[1]}
-        print(ratings)
         return ratings
     
 
     def rating(self, user):
+        if user == None:
+            return None
         fetch = 'select rating from channel_ratings where channel_id = :channel_id and user_id=:user_id'
         result = db.session.execute(fetch, {"channel_id": self.id, "user_id": user.id}).fetchall()
         if len(result) == 0:
@@ -84,7 +82,7 @@ class Channels(db.Model):
 class Threads(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=True)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
     creator_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     creator = db.relationship('Users', backref=db.backref('threads', lazy=True, cascade="all, delete"))
@@ -105,7 +103,7 @@ likes_table = db.Table('likes',
 class Messages(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=True)
-    send_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    send_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
     sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     sender = db.relationship('Users', backref=db.backref('messages', lazy=True, cascade="all, delete"))
@@ -120,50 +118,3 @@ class Messages(db.Model):
 
     def __repr__(self):
         return '<Messages %r>' % self.content
-
-
-def setup_defaults():
-    subjects = ['Cinema', 'Viral Stories', 'Memes', 'Hobbies']
-    topics = ['Something...', 'What about...', 'Popular']
-    admin = Users(username='admin', password=generate_password_hash('password'), is_admin=True)
-    db.session.add(admin)
-
-    customer = Users(username='customer', password=generate_password_hash('password'))
-    db.session.add(customer)
-
-    user1 = Users(username='user1', password=generate_password_hash('password'))
-    db.session.add(user1)
-
-    user2 = Users(username='user2', password=generate_password_hash('password'))
-    db.session.add(user2)
-
-    default_channel = Channels(title='Default', description="This is default channel.", creator=admin)
-    db.session.add(default_channel)
-
-    secret_channel = Channels(title='Secret', description="This is secret channel.", creator=admin, is_secret=True)
-    secret_channel.secret_users.append(user1)
-    secret_channel.secret_users.append(user2)
-    db.session.add(default_channel)
-
-    for i in range(4):
-        new_channel = Channels(title=subjects[i], description='This is a discussion board for the subject ' + subjects[i], creator=admin)
-        db.session.add(new_channel)
-
-        for j in range(3):
-            thread = Threads(title=topics[j], creator=admin, channel=new_channel)
-            db.session.add(thread)
-
-            message = Messages(content='First!', sender=customer, thread=thread)
-            db.session.add(message)
-
-            message = Messages(content='Second!', sender=customer, thread=thread, reply_to=message)
-            db.session.add(message)
-
-            message = Messages(content='Hi! How are you?', sender=admin, thread=thread)
-            db.session.add(message)
-
-            message = Messages(content='Hi! I\'m fine.', sender=customer, thread=thread, reply_to=message)
-            db.session.add(message)
-
-    db.session.commit()
-
