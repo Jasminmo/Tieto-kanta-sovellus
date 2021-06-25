@@ -4,6 +4,7 @@ from .models import Messages, Threads
 from .forms import MessageForm
 from .auth import is_logged_in
 from .channels import can_view_channel
+from sqlalchemy import func
 
 bp = Blueprint('messages', __name__)
 db = get_db()
@@ -71,7 +72,7 @@ def delete(id):
 @bp.route('/search', methods=('GET',))
 def search():
     query = request.args["query"]
-    results = Messages.query.filter(Messages.content.like('%' + query + '%')).order_by(Messages.send_at).all()
+    results = Messages.query.filter(func.lower(Messages.content).like('%' + query.lower() + '%')).order_by(Messages.send_at).all()
     messages = []
     print(messages)
     for message in results:
