@@ -18,6 +18,7 @@
         </button>
         <div class="d-flex justify-content-end align-items-center">
           <form class="d-flex pe-5" action="/search">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <input class="form-control me-2" placeholder="Search messages" aria-label="Search" name="query" required>
             <button class="btn btn-primary" type="submit">Search</button>
           </form>

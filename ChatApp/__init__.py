@@ -4,6 +4,7 @@ from os import getenv
 from flask import Flask
 from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import CSRFProtect
 
 SQL = None
 
@@ -71,5 +72,8 @@ def create_app(test_config=None):
         if format == None:
             format='%a %h %d %Y %H:%M'
         return date.strftime(format)
+
+    csfr = CSRFProtect()
+    csfr.init_app(app)
 
     return app

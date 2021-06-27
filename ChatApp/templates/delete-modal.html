@@ -11,7 +11,8 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
           <form id="deleteForm" method="post">
-          <button class="btn btn-danger" type="submit"><i class="bi bi-trash-fill"></i> Delete</button>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <button class="btn btn-danger" type="submit"><i class="bi bi-trash-fill"></i> Delete</button>
           </form>
         </div>
       </div>
