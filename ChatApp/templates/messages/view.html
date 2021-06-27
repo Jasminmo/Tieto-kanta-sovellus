@@ -13,6 +13,7 @@
       {% endif %}
 
         <form action="{{ action }}" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
           {% if message.likes | count > 0 %}
             <span class="badge bg-info">{{ message.likes | count }} likes</span>
           {% else %}

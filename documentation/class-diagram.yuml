@@ -5,21 +5,26 @@
 // ------------------
 
 // Properties
-[Admin|username: String;password: String; created_at: Timestamp]
-[User|firstname: String; lastname: String; username: String; password: String; created_at: Timestamp]
-[Channel|topic: String; last_message_sent: Timestamp; created_at: Timestamp]
-[Thread|title: String; created_at: Timestamp]
-[Message|content: String; sent: Timestamp]
+[User|username: String; password: String]
+[Channel|title: String; description: String]
+[Thread|title: String]
+[Message|content: String; sent_at: Timestamp]
+[Rating|rating: Integer]
 
 // Relations
+[Admin]-^[User]
+
 [Admin]-*>[Channel]
 [Channel]-*>[Thread]
+[Channel]-*[Rating]
+[User]-*[Rating]
 
-[PublicChannel]-^[Channel]
-[SecretChannel]-^[Channel]
-
+[User]*-[SecretUser]
+[SecretUser]-*[Channel]
 [User]-*>[Thread]
 [User]-*>[Message]
+[User]*-[MessageLikes]
+[MessageLikes]-*[Message]
 [SecretChannel]-*>[User]
 
 [Thread]-*>[Message]

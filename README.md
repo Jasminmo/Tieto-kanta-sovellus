@@ -1,16 +1,19 @@
 # Keskustelusovellus
-Sovelluksessa näkyy keskustelualueita, joista jokaisella on tietty aihe.
-Alueilla on viestiketjuja, jotka muodostuvat viesteistä.
-Sovelluksella on kolmea käyttäjäroolia on vierailija, kirjautunut käyttäjä ja ylläpitäjä.
+Tässä keskustelusovelluksesta löytyy keskustelualueita (kanavia).
+Keskustelualueita on viestiketjuja, jotka muodostuvat viesteistä.
+Sovelluksella on kolmea käyttäjäroolia on vierailija, kirjautunut käyttäjä sekä ylläpitäjä.
+
+## Sovelluksen [määrittelydokumentti](./documentation/README-fi.md)
+
+## Documentation [in english](./documentation/README.md)
 
 ## Tämän hetkinen tilanne
-Sovellus on melkein valmis ja melkein kaikki toiminnallisuudet ovat toteutettuna.
 Sovellus löytyy verkosta osoitteessa [https://powerful-everglades-12307.herokuapp.com](https://powerful-everglades-12307.herokuapp.com).
 Sovellukseen voi kirjautua joko
  * tavallisena käyttäjänä käyttäjänimellä ```customer``` ja salasanalla ```password``` tai
  * ylläpitäjänä käyttäjänimellä ```admin``` ja salasanalla ```password```.
 
-## Sovelluksen toiminnallisuuksia:
+## Yleiskuvais sovelluksen toiminnallisuuksista:
 - [x] Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen.
 - [x] Käyttäjä näkee sovelluksen etusivulla listan alueista sekä jokaisen alueen ketjujen ja viestien määrän ja viimeksi lähetetyn viestin ajankohdan.
 - [x] Käyttäjä voi luoda alueelle uuden ketjun antamalla ketjun otsikon ja aloitusviestin sisällön.
@@ -21,5 +24,3 @@ Sovellukseen voi kirjautua joko
 - [x] Käyttäjä voi arvioda kanavia.
 - [x] Ylläpitäjä voi lisätä ja poistaa keskustelualueita.
 - [x] Ylläpitäjä voi luoda salaisen alueen ja määrittää, keillä käyttäjillä on pääsy alueelle
-
-## Sovelluksen [Määrittelydokumentti](./documentation/README.md)

@@ -28,7 +28,7 @@ channel_ratings = db.Table('channel_ratings',
 
 class Channels(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(80), nullable=False)
+    title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     is_secret = db.Column(db.Boolean(), unique=False, nullable=False, default=False)
@@ -81,7 +81,7 @@ class Channels(db.Model):
 
 class Threads(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(80), nullable=True)
+    title = db.Column(db.String(100), nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
     creator_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
@@ -102,7 +102,7 @@ likes_table = db.Table('likes',
 
 class Messages(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.Text, nullable=True)
+    content = db.Column(db.String(200), nullable=True)
     send_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
     sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)

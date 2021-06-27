@@ -1,5 +1,10 @@
 # Documentation
 
+## Introduction
+This is a chat app where there are chat rooms called channels
+and message threads. Users can view and rate channels, and
+send/like messages. For more detail see the description below.
+
 ## Table of contents
  * [Use cases](#use-cases)
    + [User](#user)
@@ -26,12 +31,14 @@
 - [x] A visitor can see and search messages.
 - [x] A visitor can see the number of likes a message has recieved.
 
+<img src="./img/use-cases/visitor-en.jpg">
+
 ### Logged in user
 
 #### Channels
 - [x] A logged in user can rate a channel.
 
-<img src="./img/use-cases/user-browse.jpeg">
+<img src="./img/use-cases/user-browse-en.jpg">
 
 #### Threads
 - [x] A logged in user can create a new thread linked to a channel.
@@ -39,7 +46,7 @@
 - [x] The logged in user can edit the title of the thread he has created.
 - [x] The logged in user can delete the thread he has created.
 
-<img src="./img/use-cases/user-threads.jpeg">
+<img src="./img/use-cases/user-threads-en.jpg">
 
 
 #### Messaging
@@ -49,21 +56,20 @@
 - [x] The logged in user can like any message.
 - [x] The logged in user can remove like from any previously liked message.
 
-<img src="./img/use-cases/user-msg.jpeg">
+<img src="./img/use-cases/user-msg-en.jpg">
 
 ### Admin
 - [x] The application has a default administrator.
-- [x] The administrator can add channels (discussion boards).
-- [x] The administrator can delete channels.
-- [x] The administrator can create a secret channel.
+- [x] The administrator can add, edit, and delete channels (discussion boards).
+- [x] The administrator can add, edit, and delete secret channels.
 - [x] The administrator can determine which users have access to that secret channel.
 
-<img src="./img/use-cases/admin.jpeg">
+<img src="./img/use-cases/admin-en.jpg">
 
 ## Data model
 
 ### Class diagram
-<img src="./img/data/class.jpeg">
+<img src="./img/data/class.jpg">
 
 ### Database schema
 This diagram was generated from [this file](./database-diagram.txt) using [dbdiagram.io](dbdiagram.io) and

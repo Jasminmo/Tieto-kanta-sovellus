@@ -1,18 +1,52 @@
 // {type:usecase}
 
-[Admin]-(Log in & out)
-[Admin]-(Add and remove channels)
-[Admin]-(Add a secret channel)
+[Visitor]-(Sign up)
+[Visitor]-(Sign in)
+[Visitor]-(Sign out)
+[Visitor]-(Browse channels and threads)
+[Visitor]-(search for messages)
 
-[User]-(Sign up)
-[User]-(Log in & out)
-[User]-(Browse channels & threads)
-[User]-(Browse message threads)
+[Vierailija]-(Rekisteröityä)
+[Vierailija]-(Kirjautua sisään)
+[Vierailija]-(Kirjautua ulos)
+[Vierailija]-(Katsella kanavia ja viestiketjuja)
+[Vierailija]-(Hakea viestejä)
+
+[User]-(Rate a channels)
+[User]-(Browse channels and threads)
+[Käyttäjä]-(Arvioda kanavia)
+[Käyttäjä]-(Katsella kanavia ja viestiketjuja)
 
 [User]-(Create a new thread)
 [User]-(Edit created threads name)
 [User]-(Delete created thread)
 
+[Käyttäjä]-(Avata uuden viestiketjun)
+[Käyttäjä]-(Muokata avaamansa viestiketjun nimeä)
+[Käyttäjä]-(Poistaa avaamansa viestiketjun)
+
+
 [User]-(Send a message)
 [User]-(Edit sent message)
-[User]-(Search for messages)
+[User]-(Delete sent message)
+[User]-(Like messages)
+
+[Käyttäjä]-(Voi lähettää viestejä)
+[Käyttäjä]-(Muokata lähettämiään viestejä)
+[Käyttäjä]-(Poistaa lähettämiään viestejä)
+[Käyttäjä]-(Pitää viesteistä)
+
+
+[Admin]-(Add admin accounts)
+[Admin]-(Add public channels)
+[Admin]-(Add secret channels)
+[Admin]-(Edit channels)
+[Admin]-(Delete channels)
+[Admin]-(Decide who gets access to a secret channel)
+
+[Ylläpitäjä]-(Lisää ylläpitäjätilin)
+[Ylläpitäjä]-(Avaa julkisia kanavia)
+[Ylläpitäjä]-(Avaa salaisia kanavia)
+[Ylläpitäjä]-(Muokkaa kanavia)
+[Ylläpitäjä]-(Poistaa kanavia)
+[Ylläpitäjä]-(Määrätä ketkä pääsevät salaiselle kanavalle)
